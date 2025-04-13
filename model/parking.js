@@ -49,7 +49,7 @@ const parkingSchema = new Schema({
     required : true
 
   },
-  services : [ {type : Schema.Types.ObjectId, ref : 'Service'}],
+  prestations : [ {type : Schema.Types.ObjectId, ref : 'prestation'}],
   // Métadonnées 
   horaires : { ouverture : { type : String , default : '08:00'} , fermeture : { type : String, default : '20:00'}} ,
 

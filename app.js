@@ -43,6 +43,6 @@ app.use(function(err, req, res, next) {
 });
 
 
-mongoose.connect(configDb.mongo.uri);
+mongoose.connect(configDb.mongo.uri)
 
 module.exports = app;
