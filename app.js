@@ -3,6 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+// prestation 
+const prestationRouter = require('./routes/prestation')
 
 const mongoose = require("mongoose");
 const configDb = require("./config/db.json");
@@ -41,6 +43,9 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+// prestation 
+  app.use('api/services',prestationRouter)
 
 
 mongoose.connect(configDb.mongo.uri)
