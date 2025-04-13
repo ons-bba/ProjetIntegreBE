@@ -45,7 +45,7 @@ app.use(function(err, req, res, next) {
 });
 
 // prestation 
-  app.use('api/services',prestationRouter)
+  app.use('/api/services',prestationRouter)
 
 
 mongoose.connect(configDb.mongo.uri)

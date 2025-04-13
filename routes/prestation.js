@@ -1,12 +1,12 @@
 const express = require('express');
-const router = require('Router');
+const router = express.Router();
 const Prestation = require('../model/prestation');
 
 
 
 // create : Ajouter un nouveau service 
 
-route.post('/', async(req,res)=>{
+router.post('/', async(req,res)=>{
     try {
         const prest = new Prestation(req.body);
         await prest.save();
@@ -16,5 +16,12 @@ route.post('/', async(req,res)=>{
         res.status(400).json({error:err.message})
     }
 });
+
+
+
+
+
+
+module.exports = router
 
 

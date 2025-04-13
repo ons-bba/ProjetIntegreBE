@@ -20,8 +20,8 @@ const prestationSchema = Schema({
     categorie : {
         type : String,
         required : true,
-        enum : 
-        { value : ['STATIONNEMENT','SECURITE','ELECTRIQUE','CONFORT','PREMUIM'], message : 'catégorie de prestation invalid'}
+        enum :  ['STATIONNEMENT','SECURITE','ELECTRIQUE','CONFORT','PREMIUM']
+        
     },
     //Tarification 
     tarif : {
