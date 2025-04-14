@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 // prestation 
 const prestationRouter = require('./routes/prestation')
+const parkingRouter = require('./routes/parking')
 
 const mongoose = require("mongoose");
 const configDb = require("./config/db.json");
@@ -29,7 +30,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 // prestation 
-app.use('/api/prestations',prestationRouter)
+app.use('/api/prestations',prestationRouter);
+app.use('/api/parking',parkingRouter);
 
 
 

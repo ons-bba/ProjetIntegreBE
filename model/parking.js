@@ -60,5 +60,6 @@ const parkingSchema = new Schema({
 });
 
 
-module.exports = mongoose.model(Parking,parkingSchema)
+
+module.exports = mongoose.model('Parking',parkingSchema)
 
