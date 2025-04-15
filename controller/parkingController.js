@@ -6,18 +6,31 @@ const Parking = require('../model/parking')
 const parkingController = {
     createParking: async (req, res) => {
         try {
-            const { longitude, latitude, ...rest } = req.body
+            // Validation des coordonnées
+            if (!req.body.localisation || !req.body.localisation.coordinates) {
+                return res.status(400).json({ error: "Les coordonnées de localisation sont requises" });
+            }
+    
+            const { longitude, latitude, ...rest } = req.body.localisation.coordinates
+                ? {
+                    longitude: req.body.localisation.coordinates[0],
+                    latitude: req.body.localisation.coordinates[1],
+                    ...req.body
+                  }
+                : req.body;
+    
             const parkingData = {
                 ...rest,
                 localisation: {
                     type: 'Point',
-                    coordinates: [req.body.longitude, req.body.latitude]
+                    coordinates: [parseFloat(longitude), parseFloat(latitude)]
                 }
-            }
-            const parking = new Parking(parkingData)
+            };
+    
+            const parking = new Parking(parkingData);
             await parking.save();
-            res.status(201).json(parking)
-
+            res.status(201).json(parking);
+    
         } catch (err) {
             res.status(500).json({ error: err.message })
 
