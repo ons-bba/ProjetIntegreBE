@@ -30,7 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-// prestation 
+// prestation & parking endPoint
 app.use('/api/prestations',prestationRouter);
 app.use('/api/parking',parkingRouter);
 
