@@ -9,7 +9,7 @@ const placeSchema = mongoose.Schema({
         numero : numero,
         parking : this.parking
       });
-      return !exixting
+      return !existing
     },
     message : 'Le numero de place doit étre unique dans ce parking'
   }
