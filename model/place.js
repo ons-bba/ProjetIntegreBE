@@ -14,9 +14,10 @@ const placeSchema = mongoose.Schema({
     message : 'Le numero de place doit étre unique dans ce parking'
   }
   },
+  tarif : {type:Schema.Types.ObjectId, ref : 'Tarif'},
   
-  disponible : {type : boolean ,default : true},
-  type : { type:String , enum : ['standard', 'handicape','electrique'], default : 'standard'},
+  statut : {type : String ,enum: ['libre','réservée','occupée','maintenance']},
+  type : { type:String , enum : ['standard', 'handicape','electrique','camion'], default : 'standard'},
   parking : {type : mongoose.Schema.Types.ObjectId , ref : Parking, required : true}
 
 })
