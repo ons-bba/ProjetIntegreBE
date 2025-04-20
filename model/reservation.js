@@ -24,7 +24,28 @@ const reservationSchema = new mongoose.Schema({
 
     //Tarif (référence depuis la place )
 
-    tarifApplique : { base : Number, ajustement: [{raison: String, }]
-    }
+    tarif: { 
+        montant : {type: Number, required: true},
+        details: {
+            type : String,
+            enum : ['horaire', 'journalier','abonnement'],
+            required: true
+        }
+    },
 
-})
+    // Etat 
+
+    statut: {
+        type: String,
+        enum : ['confirmée', 'annulée', 'en_cours', 'terminée'],
+        default : true
+    },
+    // Paiement 
+    paiementId: {type:String}, // Référence stripe / PayPal
+    methodePaiement: {type:String, enum: ['carte', 'espece', 'wallet']},
+
+    // Timestamps automatisés
+    createdAt:{type: Date, default: Date.now},
+    updateAt: {type:Date, default: Date.now}
+
+}, {timestamps: true})
