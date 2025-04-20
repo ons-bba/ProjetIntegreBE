@@ -85,7 +85,19 @@ const parkingController = {
             return res.status(200).json(update)
 
         } catch (err) {
-            res.status(500).json({ error: err.message })
+            
+            if(err.name === "ValidatorError"){
+                return res.status(400).json({
+                    success : false,
+                    message: "Erreur de validation",
+                    error : "err.message"
+                })
+            };
+            return res.status(500).json({
+                success : false,
+                message: "Erreur serveur lors de la mise a jour de parking",
+                error: err.message
+            })
         }
     },
 
