@@ -105,14 +105,20 @@ parkingSchema.pre('save', function (next) {
   next();
 });
 
-parkingSchema.pre('findOneAndUpdate',function(next){
-const update = this.getUpdate(); 
-if(update.$set.prestations){
-  const exists = mongoose.model('Prestation').exists({_id:presentationId});
-  if(!exists) throw new Error ('Prestation ${prestationId} non trouvée')
-}
-
-})
+parkingSchema.pre('findOneAndUpdate', async function(next) {
+  const update = this.getUpdate(); 
+  if(update.$set?.prestations){
+    // 1. Parcourir toutes les prestations
+    for (const prestationId of update.$set.prestations) {
+      // 2. Vérifier chaque ID
+      const exists = await mongoose.model('Prestation').exists({ _id: prestationId });
+      if (!exists) {
+        throw new Error(`Prestation ${prestationId} non trouvée`);
+      }
+    }
+  }
+  next();
+});
 
 
 

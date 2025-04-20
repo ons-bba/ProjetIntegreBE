@@ -1,4 +1,6 @@
-const Parking = require('../model/parking')
+const { default: mongoose } = require('mongoose');
+const Parking = require('../model/parking');
+const { isValidObjectId } = require('../model/validator/validators');
 
 
 
@@ -39,7 +41,7 @@ const parkingController = {
     },
     getAllParkings: async (req, res) => {
         try {
-            const parkings = await Parking.find().populate('prestations').populate('tarifParking');
+            const parkings = await Parking.find().populate('prestations');
             if (!parkings) {
                 return res.status(404).json({ message: 'service non disponible' })
             }
@@ -65,14 +67,25 @@ const parkingController = {
 
     updateParking: async (req, res) => {
         try {
-            const update = await Parking.findByIdAndUpdate(req.params.id, req.body, { new: true });
-            if (!update) {
-                res.status(404).json({ message: 'service non disponible' })
+            
+            const {id}=req.params
+            if(! mongoose.Types.ObjectId.isValid(id)){
+                return res.status(400).json({message:"ID de parking invalid"})
             }
-            res.status(200).json(update)
+            if(Object.keys(req.body).length == 0){
+                return res.status(400).json({message:"Aucun donnée fournie pour la mise ajour"})
+            }
+            const update = await Parking.findByIdAndUpdate(id, {$set : req.body}, { new: true, 
+                runValidators: true
+             });
+            
+            if (!update) {
+                return res.status(404).json({ message: 'service non disponible' })
+            }
+            return res.status(200).json(update)
 
         } catch (err) {
-            res.status(500).json({ error: err.json })
+            res.status(500).json({ error: err.message })
         }
     },
 

@@ -41,7 +41,7 @@ const prestationController = {
         }
     },
 
-    updatePrestationById: async function () {
+    updatePrestationById: async function (req,res) {
         try {
             const prestation = await Prestation.findByIdAndUpdate(req.params.id, req.body, { new: true })
             if (!prestation) {
