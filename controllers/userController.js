@@ -144,9 +144,9 @@ exports.getAllUsers = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const currentUser = req.user; // From verifyToken middleware
+    const currentUser = req.user; 
 
-    // 1. Check if target user exists
+    
     const userToDelete = await User.findById(id);
     if (!userToDelete) {
       return res.status(404).json({
@@ -155,7 +155,7 @@ exports.deleteUser = async (req, res) => {
       });
     }
 
-    // 2. Authorization check
+    
     const isOwner = currentUser._id.toString() === id;
     const isAdmin = currentUser.role === 'ADMIN';
     
@@ -166,7 +166,7 @@ exports.deleteUser = async (req, res) => {
       });
     }
 
-    // 3. Soft delete (update status)
+    
     const deletedUser = await User.findByIdAndUpdate(
       id,
       { status: 'SUPPRIMER' },

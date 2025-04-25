@@ -33,7 +33,9 @@ const userSchemaYup = yup.object().shape({
 
   role: yup.string()
     .oneOf(['CONDUCTEUR', 'OPERATEUR', 'ADMIN'], 'Rôle invalide')
-    .default('CONDUCTEUR'),
+    .default('CONDUCTEUR'), 
+  sex : yup.string().oneOf(["HOMME" , "FEMME"])
+    ,
 
   preferences: yup.mixed().default({}),
 
