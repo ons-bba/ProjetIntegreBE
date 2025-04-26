@@ -2,11 +2,18 @@ var express = require('express');
 var router = express.Router();
 const User = require('../model/user');
 const { validateUser, validateUserRegistration, validateUserUpdate } = require('../model/validator/userValidator');  // Import the middleware
-const { registerUser, loginUser, deleteUser, getAllActiveUsers, getAllUsers, getUserById, verifyAccount, getFilteredUsers, suspendUser, updateUser } = require('../controllers/userController');
+const { registerUser, loginUser, deleteUser, getAllActiveUsers, getAllUsers, getUserById, verifyAccount, getFilteredUsers, suspendUser, updateUser, getUserStatistics } = require('../controllers/userController');
 const { validateLogin } = require('../model/validator/loginValidator');
 const { verifyToken, restrictToAdmin } = require('../middlewares/authMiddleware');
 const { handleUploadErrors, upload } = require('../tools/uploads');
 
+
+router.get(
+    '/statistics',
+    verifyToken,
+    restrictToAdmin,
+    getUserStatistics
+  );
 
 router.get('/', verifyToken, restrictToAdmin, getAllActiveUsers);
 router.get('/active', verifyToken, restrictToAdmin ,  getAllUsers);

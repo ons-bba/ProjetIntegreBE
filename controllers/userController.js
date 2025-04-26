@@ -566,3 +566,157 @@ exports.getFilteredUsers = async (req, res) => {
     });
   }
 };
+
+
+// In userController.js
+exports.getUserStatistics = async (req, res) => {
+  try {
+    const stats = await Promise.all([
+      // Basic counts
+      User.aggregate([
+        {
+          $facet: {
+            totalUsers: [{ $count: "count" }],
+            roleDistribution: [
+              { $group: { _id: "$role", count: { $sum: 1 } } }
+            ],
+            statusDistribution: [
+              { $group: { _id: "$status", count: { $sum: 1 } } }
+            ],
+            genderDistribution: [
+              { $group: { _id: "$sex", count: { $sum: 1 } } }
+            ]
+          }
+        }
+      ]),
+
+      // Registration trends (last 12 months)
+      User.aggregate([
+        {
+          $group: {
+            _id: {
+              year: { $year: "$date_inscription" },
+              month: { $month: "$date_inscription" }
+            },
+            count: { $sum: 1 }
+          }
+        },
+        { $sort: { "_id.year": -1, "_id.month": -1 } },
+        { $limit: 12 }
+      ]),
+
+      // Loyalty points analysis
+      User.aggregate([
+        {
+          $group: {
+            _id: null,
+            avgPoints: { $avg: "$points_fidelite" },
+            maxPoints: { $max: "$points_fidelite" },
+            minPoints: { $min: "$points_fidelite" }
+          }
+        }
+      ]),
+
+      // Phone number presence
+      User.aggregate([
+        {
+          $facet: {
+            withPhone: [
+              { $match: { telephone: { $exists: true, $ne: null } } },
+              { $count: "count" }
+            ],
+            withoutPhone: [
+              { $match: { telephone: { $exists: false } } },
+              { $count: "count" }
+            ]
+          }
+        }
+      ]),
+
+      // Image usage
+      User.aggregate([
+        {
+          $group: {
+            _id: {
+              $cond: [
+                { $eq: ["$image", "default-user.jpg"] },
+                "default",
+                "custom"
+              ]
+            },
+            count: { $sum: 1 }
+          }
+        }
+      ]),
+
+      // Recent activity (users with parking history in last 30 days)
+      User.aggregate([
+        { $unwind: "$historique_stationnement" },
+        { 
+          $match: { 
+            "historique_stationnement.date": { 
+              $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) 
+            } 
+          } 
+        },
+        { $group: { _id: "$_id" } },
+        { $count: "activeUsers" }
+      ]),
+
+      // Top loyal users
+      User.find()
+        .sort({ points_fidelite: -1 })
+        .limit(10)
+        .select('prenom nom points_fidelite image')
+        .lean()
+    ]);
+
+    // Process all statistics
+    const result = {
+      totalUsers: stats[0][0].totalUsers[0]?.count || 0,
+      roleDistribution: processDistribution(stats[0][0].roleDistribution),
+      statusDistribution: processDistribution(stats[0][0].statusDistribution),
+      genderDistribution: processDistribution(stats[0][0].genderDistribution),
+      registrationTrends: stats[1].map(item => ({
+        year: item._id.year,
+        month: item._id.month,
+        count: item.count
+      })),
+      loyaltyPoints: {
+        average: stats[2][0]?.avgPoints || 0,
+        maximum: stats[2][0]?.maxPoints || 0,
+        minimum: stats[2][0]?.minPoints || 0,
+        aboveAverageCount: await User.countDocuments({ 
+          points_fidelite: { $gt: stats[2][0]?.avgPoints || 0 } 
+        })
+      },
+      phoneUsage: {
+        withPhone: stats[3][0].withPhone[0]?.count || 0,
+        withoutPhone: stats[3][0].withoutPhone[0]?.count || 0
+      },
+      imageUsage: processDistribution(stats[4]),
+      recentActivity: stats[5][0]?.activeUsers || 0,
+      topLoyalUsers: stats[6]
+    };
+
+    res.status(200).json({
+      success: true,
+      statistics: result
+    });
+
+  } catch (error) {
+    console.error('Statistics error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur lors de la récupération des statistiques'
+    });
+  }
+};
+
+// Helper function to format distribution data
+const processDistribution = (data) => {
+  return data.reduce((acc, curr) => {
+    acc[curr._id] = curr.count;
+    return acc;
+  }, {});
+};
