@@ -57,9 +57,18 @@ const userSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ['ACTIF', 'SUSPENDU', 'BLOQUE', 'SUPPRIME'],
-    default: 'ACTIF'
-  }
+    enum: ['ACTIF', 'SUSPENDU', 'BLOQUE', 'ARCHIVE', 'PENDING'], // besh na7iw supp
+    default: 'PENDING' // Changed from 'ACTIF'
+  },
+  sex  : {
+    type: String,
+    enum: ['HOMME', 'FEMME'],
+    default: 'HOMME'
+  },
+  image: {
+    type: String,
+    default: 'default-user.jpg'
+  },
 }, {
   timestamps: false,
   versionKey: false
@@ -71,7 +80,6 @@ const userSchema = new Schema({
 
 
 
-// Password hashing middleware
 userSchema.pre('save', async function(next) {
   if (!this.isModified('mot_de_passe')) return next();
   
@@ -84,12 +92,10 @@ userSchema.pre('save', async function(next) {
   }
 });
 
-// Password comparison method
 userSchema.methods.comparePassword = async function(candidatePassword) {
   return bcrypt.compare(candidatePassword, this.mot_de_passe);
 };
 
-// JWT generation method
 userSchema.methods.generateAuthToken = function() {
   if (!process.env.JWT_SECRET) {
     throw new Error('JWT secret is not configured');
@@ -105,7 +111,17 @@ userSchema.methods.generateAuthToken = function() {
     { expiresIn: '1h' }
   );
 };
-// Add this method to your userSchema
+
+userSchema.methods.generateVerificationToken = function() {
+  return jwt.sign(
+    {
+      _id: this._id,
+      purpose: 'email_verification'
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: '1d' }
+  );
+};
 userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
   if (this.passwordChangedAt) {
     const changedTimestamp = parseInt(

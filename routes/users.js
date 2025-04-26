@@ -1,25 +1,54 @@
 var express = require('express');
 var router = express.Router();
 const User = require('../model/user');
-const { validateUser } = require('../model/validator/userValidator');  // Import the middleware
-const { registerUser, loginUser, deleteUser, getAllActiveUsers, getAllUsers, getUserById } = require('../controllers/userController');
+const { validateUser, validateUserRegistration, validateUserUpdate } = require('../model/validator/userValidator');  // Import the middleware
+const { registerUser, loginUser, deleteUser, getAllActiveUsers, getAllUsers, getUserById, verifyAccount, getFilteredUsers, suspendUser, updateUser, getUserStatistics } = require('../controllers/userController');
 const { validateLogin } = require('../model/validator/loginValidator');
 const { verifyToken, restrictToAdmin } = require('../middlewares/authMiddleware');
+const { handleUploadErrors, upload } = require('../tools/uploads');
 
+
+router.get(
+    '/statistics',
+    verifyToken,
+    restrictToAdmin,
+    getUserStatistics
+  );
 
 router.get('/', verifyToken, restrictToAdmin, getAllActiveUsers);
+router.get('/active', verifyToken, restrictToAdmin ,  getAllUsers);
+router.get('/filtered', verifyToken, restrictToAdmin , getFilteredUsers);
 
-router.get('/active', verifyToken, getAllUsers);
+router.get('/verifyaccount/:token', verifyAccount);
+router.get('/:id', verifyToken, getUserById);
 
 
 
-router.post('/register', validateUser, registerUser);  
+router.post(
+    '/register',
+    upload.single('image'),
+    handleUploadErrors,
+    validateUserRegistration,  // Use registration validator
+    registerUser
+  );
 
 
 router.post('/login', validateLogin, loginUser);
 
-router.get('/:id', verifyToken, getUserById);
 
-router.delete('/:id', verifyToken, deleteUser);
+// router.delete('/:id', verifyToken, deleteUser);
+
+router.put('/:id', verifyToken, suspendUser);
+
+// Add this route
+router.put(
+    '/:id/update',
+    verifyToken,
+    restrictToAdmin,
+    upload.single('image'),
+    handleUploadErrors,
+    validateUserUpdate,  // Use update validator
+    updateUser
+  );
 
 module.exports = router;
