@@ -57,14 +57,18 @@ const userSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ['ACTIF', 'SUSPENDU', 'BLOQUE', 'SUPPRIME'],
-    default: 'ACTIF'
+    enum: ['ACTIF', 'SUSPENDU', 'BLOQUE', 'ARCHIVE', 'PENDING'], // besh na7iw supp
+    default: 'PENDING' // Changed from 'ACTIF'
   },
   sex  : {
     type: String,
     enum: ['HOMME', 'FEMME'],
     default: 'HOMME'
-  }
+  },
+  image: {
+    type: String,
+    default: 'default-user.jpg'
+  },
 }, {
   timestamps: false,
   versionKey: false
@@ -108,7 +112,16 @@ userSchema.methods.generateAuthToken = function() {
   );
 };
 
-
+userSchema.methods.generateVerificationToken = function() {
+  return jwt.sign(
+    {
+      _id: this._id,
+      purpose: 'email_verification'
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: '1d' }
+  );
+};
 userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
   if (this.passwordChangedAt) {
     const changedTimestamp = parseInt(
