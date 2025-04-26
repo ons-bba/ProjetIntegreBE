@@ -6,6 +6,7 @@ var logger = require('morgan');
 // prestation 
 const prestationRouter = require('./routes/prestation')
 const parkingRouter = require('./routes/parking')
+const tarifRouter = require('./routes/tarif')
 
 const mongoose = require("mongoose");
 const configDb = require("./config/db.json");
@@ -35,6 +36,7 @@ app.use('/users', usersRouter);
 // prestation & parking endPoint
 app.use('/api/prestations',prestationRouter);
 app.use('/api/parking',parkingRouter);
+app.use('/api/tarif',tarifRouter)
 
 
 
