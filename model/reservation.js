@@ -3,42 +3,34 @@ const mongoose = require('mongoose');
 const reservationSchema = new mongoose.Schema({
 
     //référence
-    user : {type:Schema.Type.objectId, ref : 'User', required : true },
-    parking : {type: Schema.Type.objectId, ref : 'Parking', required: true},
-    place : { type: Schema.Type.objectId,  ref : 'Place' },
+    user : {type:mongoose.Schema.Types.ObjectId, ref : 'User', required : true },
+    parking : {type: mongoose.Schema.Types.ObjectId, ref : 'Parking', required: true},
+    place : { type: mongoose.Schema.Types.ObjectId,  ref : 'Place' },
 
     //plage horaire
     debut : { 
         type : Date, 
         required:true,
-        validator : {validator : (v)=> {return v>new Date()}},
+        validate : {validator : (v)=> {return v>new Date()}},
         message : 'La date de debut doit etre dans le futur'
     },
     fin : {
         type: Date,
          required : true,
-         validator : {validate : (v)=>{ return v>this.debut}},
+         validate : {validate : (v)=>{ return v>this.debut}},
          message : 'La date de fin doit etre aprés le debut'
         },
     
 
-    //Tarif (référence depuis la place )
+    
 
-    tarif: { 
-        montant : {type: Number, required: true},
-        details: {
-            type : String,
-            enum : ['horaire', 'journalier','abonnement'],
-            required: true
-        }
-    },
 
     // Etat 
 
     statut: {
         type: String,
         enum : ['confirmée', 'annulée', 'en_cours', 'terminée'],
-        default : true
+        default : 'confirmée'
     },
     // Paiement 
     paiementId: {type:String}, // Référence stripe / PayPal
@@ -49,3 +41,4 @@ const reservationSchema = new mongoose.Schema({
     updateAt: {type:Date, default: Date.now}
 
 }, {timestamps: true})
+module.exports= mongoose.model('Reservation',reservationSchema);

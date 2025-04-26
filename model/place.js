@@ -14,10 +14,11 @@ const placeSchema = mongoose.Schema({
     message : 'Le numero de place doit étre unique dans ce parking'
   }
   },
-  tarif : {type:Schema.Types.ObjectId, ref : 'Tarif'},
+  tarif : {type:mongoose.Schema.Types.ObjectId, ref : 'Tarif'},
   
   statut : {type : String ,enum: ['libre','réservée','occupée','maintenance']},
   type : { type:String , enum : ['standard', 'handicape','electrique','camion'], default : 'standard'},
   parking : {type : mongoose.Schema.Types.ObjectId , ref : Parking, required : true}
 
-})
+});
+module.exports= mongoose.model('Place',placeSchema)

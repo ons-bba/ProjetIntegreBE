@@ -46,7 +46,7 @@ const parkingSchema = new Schema({
   },
 
   prestations: [{
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Prestation',
     validate: {
       validator: async function (v) {
