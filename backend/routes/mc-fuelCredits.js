@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { auth } = require('../mc-middleware/auth');
-const { validate, body, param } = require('../mc-middleware/auth'); // Add param here
-const FuelCredit = require('../mc-models/fuelCredit');
+const { auth } = require('../middlewares/mc-auth');
+const { validate, body, param } = require('../middlewares/mc-auth'); // Add param here
+const FuelCredit = require('../model/mc-fuelCredit');
 
 // GET all fuel credits
 router.get('/', auth(['Customer', 'Admin']), async (req, res) => {

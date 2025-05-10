@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { auth } = require('../mc-middleware/auth');
-const { validate, param, query, body } = require('../mc-middleware/auth');
-const Service = require('../mc-models/service');
-const Reservation = require('../mc-models/reservation');
+const { auth, validate, param, query, body } = require('../middlewares/mc-auth');
+const Service = require('../model/mc-service');
+const Reservation = require('../model/mc-reservation');
 const QRCode = require('qrcode');
 
 // GET all services (Admin only)

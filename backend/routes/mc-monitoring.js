@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const { auth } = require('../mc-middleware/auth');
-const Reservation = require('../mc-models/reservation');
-const Subscription = require('../mc-models/subscription');
-const FuelCredit = require('../mc-models/fuelCredit');
-const Service = require('../mc-models/service');
-const Bundle = require('../mc-models/bundle');
-const Coupon = require('../mc-models/coupon');
-const User = require('../mc-models/user');
+const { auth } = require('../middlewares/mc-auth');
+const Reservation = require('../model/mc-reservation');
+const Subscription = require('../model/mc-subscription');
+const FuelCredit = require('../model/mc-fuelCredit');
+const Service = require('../model/mc-service');
+const Bundle = require('../model/mc-bundle');
+const Coupon = require('../model/mc-coupon');
+const User = require('../model/mc-user');
 
 // GET aggregated data for monitoring dashboard (Admin only)
 router.get('/', auth(['Admin']), async (req, res) => {

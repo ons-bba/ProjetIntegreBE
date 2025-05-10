@@ -1,14 +1,38 @@
 <div class="dashboard-container">
-    <h1>Admin Dashboard</h1>
-    <nav class="dashboard-nav">
-        <a routerLink="/admin/monitoring" routerLinkActive="active">Monitoring</a>
-        <a routerLink="/admin/users" routerLinkActive="active">Users</a>
-        <a routerLink="/admin/services" routerLinkActive="active">Services</a>
-        <a routerLink="/admin/subscriptions" routerLinkActive="active">Subscriptions</a>
-        <a routerLink="/admin/reservations" routerLinkActive="active">Reservations</a>
-        <a routerLink="/admin/coupons" routerLinkActive="active">Coupons</a>
-        <a routerLink="/admin/bundles" routerLinkActive="active">Bundles</a>
-        <a routerLink="/admin/fuel-credits" routerLinkActive="active">Fuel Credits</a>
-    </nav>
-    <router-outlet></router-outlet>
+  <!-- Module Selector (Buttons) -->
+  <div class="module-selector">
+    <button class="module-btn" [ngClass]="{'active': selectedModule === 'mobility-core'}" (click)="onModuleChange('mobility-core')">Mobility-Core</button>
+    <button  class="module-btn" [ngClass]="{'active': selectedModule === 'user'}" (click)="onModuleChange('user')">User</button>
+    <button  class="module-btn" [ngClass]="{'active': selectedModule === 'parking'}" (click)="onModuleChange('parking')">Parking</button>
+
+
+  </div>
+
+  <!-- Navigation (Mobility-Core) -->
+  <nav class="dashboard-nav" *ngIf="selectedModule === 'mobility-core'">
+    <a class="nav-link" routerLink="/admin/monitoring" routerLinkActive="active">Monitoring</a>
+    <a class="nav-link" routerLink="/admin/users" routerLinkActive="active">Users</a>
+    <a class="nav-link" routerLink="/admin/services" routerLinkActive="active">Services</a>
+    <a class="nav-link" routerLink="/admin/subscriptions" routerLinkActive="active">Subscriptions</a>
+    <a class="nav-link" routerLink="/admin/reservations" routerLinkActive="active">Reservations</a>
+    <a class="nav-link" routerLink="/admin/coupons" routerLinkActive="active">Coupons</a>
+    <a class="nav-link" routerLink="/admin/bundles" routerLinkActive="active">Bundles</a>
+    <a class="nav-link" routerLink="/admin/fuel-credits" routerLinkActive="active">Fuel Credits</a>
+  </nav>
+
+  <!-- Navigation (Group Module) -->
+  <nav class="dashboard-nav" *ngIf="selectedModule === 'user'">
+    <a class="nav-link" routerLink="/admin/user" routerLinkActive="active">User</a>
+    <a class="nav-link" routerLink="/admin/test" routerLinkActive="active">Test</a>
+    <a class="nav-link" routerLink="/admin/test" routerLinkActive="active">Test</a>
+  </nav>
+
+  <nav class="dashboard-nav" *ngIf="selectedModule === 'parking'">
+    <a class="nav-link" routerLink="/admin/prestations" routerLinkActive="active">Prestations</a>
+    <a class="nav-link" routerLink="/admin/parking" routerLinkActive="active">Parking</a>
+    <a class="nav-link" routerLink="/admin/tarif" routerLinkActive="active">Tarif</a>
+  </nav>
+
+  <!-- Content Area -->
+  <router-outlet></router-outlet>
 </div>

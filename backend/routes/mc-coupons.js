@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { auth } = require('../mc-middleware/auth');
+const { auth } = require('../middlewares/mc-auth');
 const { body, param, validationResult } = require('express-validator');
-const Coupon = require('../mc-models/coupon');
-const Service = require('../mc-models/service');
-const Bundle = require('../mc-models/bundle');
+const Coupon = require('../model/mc-coupon');
+const Service = require('../model/mc-service');
+const Bundle = require('../model/mc-bundle');
 
 // Middleware to check for validation errors
 const checkValidationResult = (req, res, next) => {
@@ -328,7 +328,7 @@ router.post(
                 if (!amount || amount <= 0) return res.status(400).json({ message: 'Amount is required and must be a positive number for fuel credit' });
                 originalPrice = amount;
             } else if (itemType === 'subscription') {
-                const Subscription = require('../models/subscription');
+                const Subscription = require('../model/mc-subscription');
                 const subscription = await Subscription.findById(itemId);
                 console.log('Found subscription:', subscription);
                 if (!subscription) return res.status(404).json({ message: 'Subscription not found' });
@@ -469,7 +469,7 @@ router.post(
                             originalPrice = bundle.price - (bundle.discount || 0) - (bundle.timeLimitedDiscount || 0);
                         }
                     } else if (itemType === 'subscription') {
-                        const Subscription = require('../models/subscription');
+                        const Subscription = require('../model/mc-subscription');
                         const subscription = await Subscription.findById(itemId);
                         console.log('Found subscription:', subscription);
                         if (!subscription) {

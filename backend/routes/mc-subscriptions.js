@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { auth } = require('../mc-middleware/auth');
+const { auth } = require('../middlewares/mc-auth');
 const { body, param, validationResult } = require('express-validator');
-const Subscription = require('../mc-models/subscription');
-const Service = require('../mc-models/service');
+const Subscription = require('../model/mc-subscription');
+const Service = require('../model/mc-service');
 const QRCode = require('qrcode');
 
 // Middleware to check for validation errors

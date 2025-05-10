@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { auth } = require('../mc-middleware/auth');
-const { validate, body, param } = require('../mc-middleware/auth');
-const User = require('../mc-models/user');
+const { auth, validate, body, param } = require('../middlewares/mc-auth');
+const User = require('../model/mc-user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 

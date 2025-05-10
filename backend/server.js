@@ -63,21 +63,21 @@ app.use('/api/parking', parkingRouter);
 app.use('/api/tarif', tarifRouter); 
 
 // Mobility-Core API Routes
-const createPaymentIntent = require('./mc-api/create-payment-intent');
-const sendEmail = require('./mc-api/send-email');
+const createPaymentIntent = require('./api/mc-create-payment-intent');
+const sendEmail = require('./api/mc-send-email');
 app.post('/api/create-payment-intent', createPaymentIntent.createPaymentIntent);
 app.post('/api/send-email', sendEmail.sendEmail);
 
 // Mobility-Core Routes
-const authRoutes = require('./mc-routes/auth');
-const bundlesRoutes = require('./mc-routes/bundles');
-const couponsRoutes = require('./mc-routes/coupons');
-const fuelCreditsRoutes = require('./mc-routes/fuelCredits');
-const reservationsRoutes = require('./mc-routes/reservations');
-const servicesRoutes = require('./mc-routes/services');
-const subscriptionsRoutes = require('./mc-routes/subscriptions');
-const usersMCRouter = require('./mc-routes/users'); // Renamed to avoid conflict
-const monitoringRoutes = require('./mc-routes/monitoring');
+const authRoutes = require('./routes/mc-auth');
+const bundlesRoutes = require('./routes/mc-bundles');
+const couponsRoutes = require('./routes/mc-coupons');
+const fuelCreditsRoutes = require('./routes/mc-fuelCredits');
+const reservationsRoutes = require('./routes/mc-reservations');
+const servicesRoutes = require('./routes/mc-services');
+const subscriptionsRoutes = require('./routes/mc-subscriptions');
+const usersMCRouter = require('./routes/mc-users'); // Renamed to avoid conflict
+const monitoringRoutes = require('./routes/mc-monitoring');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/bundles', bundlesRoutes);

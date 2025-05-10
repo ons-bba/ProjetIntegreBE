@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { validate, body } = require('../mc-middleware/auth');
-const User = require('../mc-models/user');
+const { validate, body } = require('../middlewares/mc-auth');
+const User = require('../model/mc-user');
 
 // POST register a new user (Public endpoint, Customer only)
 router.post('/register', validate([
