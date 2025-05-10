@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>{{ data.selectedItem ? 'Edit' : 'Add' }} Fuel Credit</h2>
+<mat-dialog-content>
+  <form [formGroup]="data.form">
+    <mat-form-field appearance="fill">
+      <mat-label>Customer</mat-label>
+      <mat-select formControlName="customerId" required>
+        <mat-option *ngFor="let user of users" [value]="user.value">
+          {{ user.label }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="data.form.get('customerId')?.touched && data.form.get('customerId')?.hasError('required')">
+        Customer is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Credits</mat-label>
+      <input matInput type="number" formControlName="credits" required>
+      <mat-error *ngIf="data.form.get('credits')?.touched && data.form.get('credits')?.hasError('required')">
+        Credits are required
+      </mat-error>
+      <mat-error *ngIf="data.form.get('credits')?.hasError('min')">
+        Credits must be positive
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Rest Credits</mat-label>
+      <input matInput type="number" formControlName="restCredits">
+      <mat-error *ngIf="data.form.hasError('restCreditsExceeds')">
+        Rest Credits cannot exceed Credits
+      </mat-error>
+    </mat-form-field>
+
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions style="display: flex; justify-content: flex-end; padding: 8px;">
+  <button mat-button (click)="onCancel()" style="margin-right: 8px;">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!data.form.valid">Save</button>
+</mat-dialog-actions>

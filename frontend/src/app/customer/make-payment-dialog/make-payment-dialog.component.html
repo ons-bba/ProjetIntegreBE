@@ -1,0 +1,18 @@
+<div class="payment-container">
+  <h2>Make Payment</h2>
+  <p>Amount to pay: {{ amount | currency:'TND':'symbol':'1.3-3' }}</p>
+  <div *ngIf="cardError" class="error-message">{{ cardError }}</div>
+  <div class="card-container">
+    <div #cardElement id="card-element"></div>
+    <div *ngIf="!cardElementRef" class="error-message">Card element container not found.</div>
+  </div>
+  <div class="button-container">
+    <button mat-raised-button color="warn" (click)="closeDialog()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="processPayment()" [disabled]="isProcessing || !stripeLoaded">
+      {{ isProcessing ? 'Processing...' : 'Pay Now' }}
+    </button>
+  </div>
+  <div *ngIf="!stripeLoaded" class="debug-message">
+    <p>Stripe failed to load. Check console for details.</p>
+  </div>
+</div>

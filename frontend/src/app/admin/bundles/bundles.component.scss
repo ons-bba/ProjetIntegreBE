@@ -1,0 +1,61 @@
+@use '../../shared-styles/shared-styles' as shared;
+
+.bundles-container {
+    @extend .container-shared;
+}
+
+.bundles-list {
+    @extend .grid-shared-three;
+}
+
+.bundle-card {
+    @extend .card-shared;
+}
+
+.bundle-image {
+    @extend .image-shared;
+}
+
+.bundle-info {
+    @extend .info-shared;
+}
+
+.bundle-name {
+    @extend .name-shared;
+}
+
+.bundle-description,
+.bundle-services,
+.bundle-price,
+.bundle-discount,
+.bundle-time-limited-discount,
+.bundle-status,
+.bundle-created-at {
+    @extend .detail-shared;
+}
+
+.bundle-description {
+    .description-text {
+        display: none; // Hide description by default
+    }
+
+    .description-text.expanded {
+        display: inline; // Show description when expanded
+    }
+}
+
+.bundle-actions {
+    @extend .actions-shared;
+}
+
+.toggle-link {
+    color: #4a90e2;
+    font-size: 14px;
+    margin-left: 6px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.toggle-link:hover {
+    text-decoration: underline;
+}

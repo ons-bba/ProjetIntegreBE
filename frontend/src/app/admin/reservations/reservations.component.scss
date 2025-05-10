@@ -1,0 +1,36 @@
+@use '../../shared-styles/shared-styles' as shared;
+
+   .reservations-container {
+       @extend .container-shared;
+   }
+
+   .reservations-list {
+       @extend .grid-shared-three; // Changed from .list-shared to .grid-shared-three
+   }
+
+   .reservation-card {
+       @extend .card-shared;
+   }
+
+   .reservation-image {
+       @extend .image-shared;
+   }
+
+   .reservation-info {
+       @extend .info-shared;
+   }
+
+   .reservation-customer,
+   .reservation-service,
+   .reservation-bundle,
+   .reservation-status,
+   .reservation-booking-date,
+   .reservation-completion-date,
+   .reservation-total-cost,
+   .reservation-notes {
+       @extend .detail-shared;
+   }
+
+   .reservation-actions {
+       @extend .actions-shared;
+   }

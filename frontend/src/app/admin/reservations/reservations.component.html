@@ -1,0 +1,42 @@
+<div class="reservations-container">
+    <h2>Reservations Management</h2>
+    <button mat-raised-button color="primary" (click)="openEditDialog()" style="margin-bottom: 16px;">
+        Add New Reservation
+    </button>
+    <div class="reservations-list">
+        <div class="reservation-card" *ngFor="let reservation of reservations">
+            <div class="reservation-image">
+                <img *ngIf="reservation.qrCode" [src]="reservation.qrCode" alt="QR Code"
+                    (error)="onQRCodeError(reservation)">
+                <div *ngIf="!reservation.qrCode" class="qr-placeholder">
+                    QR Code Not Available
+                </div>
+            </div>
+            <div class="reservation-info">
+                <div class="reservation-customer">Customer: {{ getCustomerName(reservation.customerId) }}</div>
+                <div class="reservation-service" *ngIf="reservation.serviceId">
+                    Service: {{ getServiceName(reservation.serviceId) }}
+                </div>
+                <div class="reservation-bundle" *ngIf="reservation.bundleId">
+                    Bundle: {{ getBundleName(reservation.bundleId) }}
+                </div>
+                <div class="reservation-status">Status: {{ reservation.status }}</div>
+                <div class="reservation-booking-date">
+                    Booking Date: {{ reservation.bookingDate | date:'mediumDate' }}
+                </div>
+                <div class="reservation-completion-date" *ngIf="reservation.completionDate">
+                    Completion Date: {{ reservation.completionDate | date:'mediumDate' }}
+                </div>
+                <div class="reservation-total-cost">Total Cost: {{ reservation.totalCost }} TND</div>
+                <div class="reservation-notes" *ngIf="reservation.notes">Notes: {{ reservation.notes }}</div>
+            </div>
+            <div class="reservation-actions">
+                <button mat-raised-button color="primary" (click)="openEditDialog(reservation)">Edit</button>
+                <button mat-raised-button color="warn" (click)="deleteReservation(reservation._id)">Delete</button>
+                <button mat-raised-button class="action-button download-button" (click)="downloadQRCode(reservation.qrCode, reservation._id)">
+                    <mat-icon>qr_code</mat-icon> QR Code
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

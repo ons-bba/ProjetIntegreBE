@@ -1,0 +1,35 @@
+@use '../../shared-styles/shared-styles' as shared;
+
+   .user-container {
+       @extend .container-shared;
+   }
+
+   .users-list {
+       @extend .grid-shared-three; // Changed from .list-shared to .grid-shared-three
+   }
+
+   .user-card {
+       @extend .card-shared;
+   }
+
+   .user-image {
+       @extend .image-shared;
+   }
+
+   .user-info {
+       @extend .info-shared;
+   }
+
+   .user-name {
+       @extend .name-shared;
+   }
+
+   .user-email,
+   .user-role,
+   .user-created-at {
+       @extend .detail-shared;
+   }
+
+   .user-actions {
+       @extend .actions-shared;
+   }

@@ -1,0 +1,161 @@
+/* Center the container with a subtle background gradient */
+.register-container {
+    max-width: 450px; /* Slightly wider to accommodate the logo */
+    margin: 40px auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%); /* Subtle white-to-light-blue gradient */
+    border-radius: 15px; /* Rounded corners for the container */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px; /* Space between logo section and card */
+}
+
+.app-logo {
+    height: 100px; /* Adjusted size for the single container layout */
+    width: auto;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)); /* Shadow for the logo */
+}
+
+.app-name {
+    font-size: 2.2em; /* Slightly smaller to fit the layout */
+    font-weight: bold;
+    color: #3f51b5; /* Primary color */
+    margin-top: 15px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle text shadow */
+}
+
+.register-card {
+    width: 100%;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Slightly lighter shadow since the container already has one */
+    border-radius: 10px;
+    background-color: #ffffff; /* White background for contrast */
+}
+
+mat-card-header {
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+mat-card-title {
+    font-size: 1.8em;
+    font-weight: 600;
+    color: #3f51b5;
+}
+
+.full-width {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+mat-form-field {
+    font-size: 1em;
+    color: #333;
+}
+
+.button-row {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+button {
+    flex: 1;
+    padding: 10px;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+button[color="primary"] {
+    background-color: #3f51b5;
+    color: #ffffff;
+}
+
+button[color="primary"]:hover:not([disabled]) {
+    background-color: #5c6bc0;
+    transform: translateY(-2px);
+}
+
+button[color="warn"] {
+    background-color: #f44336;
+    color: #ffffff;
+}
+
+button[color="warn"]:hover:not([disabled]) {
+    background-color: #ef5350;
+    transform: translateY(-2px);
+}
+
+button[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.error {
+    color: #f44336;
+    margin-top: 15px;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+mat-card-actions {
+    text-align: center;
+    margin-top: 20px;
+}
+
+a {
+    color: #3f51b5;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #5c6bc0;
+}
+
+/* Fade-in animation */
+.fade-in {
+    opacity: 0;
+    animation: fadeIn 0.8s ease-in forwards;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 500px) {
+    .register-container {
+        max-width: 100%;
+        padding: 15px;
+        margin: 20px auto;
+    }
+
+    .app-logo {
+        height: 80px; /* Smaller logo on mobile */
+    }
+
+    .app-name {
+        font-size: 1.8em; /* Smaller text on mobile */
+        margin-top: 10px;
+    }
+
+    .register-card {
+        padding: 15px;
+    }
+}

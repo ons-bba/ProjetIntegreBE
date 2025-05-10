@@ -1,0 +1,36 @@
+<div class="bundles-container">
+    <h2>Available Bundles</h2>
+
+    <!-- Filters -->
+    <div class="filters">
+        <input type="text" [(ngModel)]="filters.name" placeholder="Search by name" (input)="applyFilters()">
+        <input type="number" [(ngModel)]="filters.minPrice" placeholder="Min Price" (input)="applyFilters()">
+        <input type="number" [(ngModel)]="filters.maxPrice" placeholder="Max Price" (input)="applyFilters()">
+        <select [(ngModel)]="filters.isActive" (change)="applyFilters()">
+            <option value="">All</option>
+            <option value="true">Active</option>
+            <option value="false">Inactive</option>
+        </select>
+    </div>
+
+    <!-- Bundles List -->
+    <div class="bundles-grid">
+        <div class="bundle-card" *ngFor="let bundle of filteredBundles">
+            <h3>{{ bundle.name }}</h3>
+            <p><strong>Description:</strong> {{ bundle.description }}</p>
+            <p><strong>Price:</strong> {{ bundle.price | currency:'TND':'symbol':'1.3-3' }}</p>
+            <p *ngIf="bundle.discount"><strong>Discount:</strong> {{ bundle.discount | currency:'TND':'symbol':'1.3-3' }}</p>
+            <p *ngIf="bundle.timeLimitedDiscount"><strong>Time-Limited Discount:</strong> {{ bundle.timeLimitedDiscount | currency:'TND':'symbol':'1.3-3' }}</p>
+            <div class="services-list">
+                <p><strong>Services Included:</strong></p>
+                <ul>
+                    <li *ngFor="let service of bundle.serviceIds">{{ service.name || 'Unknown Service' }}</li>
+                </ul>
+            </div>
+            <p><strong>Status:</strong> {{ bundle.isActive ? 'Active' : 'Inactive' }}</p>
+            <button class="reserve-button" (click)="reserveBundle(bundle._id)" [disabled]="!bundle.isActive">
+                Reserve
+            </button>
+        </div>
+    </div>
+</div>

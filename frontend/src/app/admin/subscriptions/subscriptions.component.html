@@ -1,0 +1,43 @@
+<div class="subscriptions-container">
+    <h2>Subscriptions Management</h2>
+    <button mat-raised-button color="primary" (click)="openEditDialog()" style="margin-bottom: 16px;">
+        Add New Subscription
+    </button>
+    <div class="subscriptions-list">
+        <div class="subscription-card" *ngFor="let subscription of subscriptions">
+            <div class="subscription-image">
+                <img *ngIf="subscription.qrCode" [src]="subscription.qrCode" alt="QR Code"
+                    (error)="onQRCodeError(subscription)">
+                <div *ngIf="!subscription.qrCode" class="qr-placeholder">
+                    QR Code Not Available
+                </div>
+            </div>
+            <div class="subscription-info">
+                <div class="subscription-plan-name">{{ subscription.planName }}</div>
+                <div class="subscription-customer">Customer: {{ getCustomerName(subscription.customerId) }}</div>
+                <div class="subscription-services">Services: {{ getServiceNames(subscription.serviceIds) }}</div>
+                <div class="subscription-price">Price: {{ subscription.price }} TND</div>
+                <div class="subscription-status">Status: {{ subscription.status }}</div>
+                <div class="subscription-start-date">Start Date: {{ subscription.startDate | date:'mediumDate' }}</div>
+                <div class="subscription-end-date" *ngIf="subscription.endDate">
+                    End Date: {{ subscription.endDate | date:'mediumDate' }}
+                </div>
+                <div class="subscription-offer" *ngIf="subscription.offerDiscount > 0">
+                    Offer Discount: {{ subscription.offerDiscount }}%
+                    ({{ subscription.offerStartDate | date:'mediumDate' }} - {{ subscription.offerEndDate |
+                    date:'mediumDate' }})
+                </div>
+                <div class="subscription-fuel" *ngIf="subscription.fuelCreditId">
+                    Fuel Credit: {{ getFuelCreditDetails(subscription.fuelCreditId._id || subscription.fuelCreditId) }}
+                </div>
+            </div>
+            <div class="subscription-actions">
+                <button mat-raised-button color="primary" (click)="openEditDialog(subscription)">Edit</button>
+                <button mat-raised-button color="warn" (click)="deleteSubscription(subscription._id)">Delete</button>
+                <button mat-raised-button class="action-button download-button" (click)="downloadQRCode(subscription.qrCode, subscription._id)">
+                    <mat-icon>qr_code</mat-icon> QR Code
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

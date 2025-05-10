@@ -1,0 +1,108 @@
+<div class="dashboard-container">
+    <h1>Admin Dashboard</h1>
+    <div class="filter-container">
+        <label for="timePeriod">Time Period: </label>
+        <select id="timePeriod" [(ngModel)]="selectedTimePeriod" (change)="updateCharts()">
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
+        </select>
+    </div>
+    <div class="chart-container">
+        <div class="chart-card">
+            <h3>Revenue Breakdown by Source</h3>
+            <div class="chart-content">
+                <highcharts-chart
+                    [Highcharts]="Highcharts"
+                    [options]="revenueBreakdownChartOptions"
+                    [update]="updateFlag"
+                    style="width: 100%; height: 400px; display: block;"
+                ></highcharts-chart>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h3>Top Performing Services</h3>
+            <div class="chart-content">
+                <highcharts-chart
+                    [Highcharts]="Highcharts"
+                    [options]="topServicesChartOptions"
+                    [update]="updateFlag"
+                    style="width: 100%; height: 400px; display: block;"
+                ></highcharts-chart>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h3>Top Performing Bundles</h3>
+            <div class="chart-content">
+                <highcharts-chart
+                    [Highcharts]="Highcharts"
+                    [options]="topBundlesChartOptions"
+                    [update]="updateFlag"
+                    style="width: 100%; height: 400px; display: block;"
+                ></highcharts-chart>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h3>Subscription Plan Performance</h3>
+            <div class="chart-content">
+                <highcharts-chart
+                    [Highcharts]="Highcharts"
+                    [options]="subscriptionPerformanceChartOptions"
+                    [update]="updateFlag"
+                    style="width: 100%; height: 400px; display: block;"
+                ></highcharts-chart>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h3>Coupon Usage Trends</h3>
+            <div class="chart-content">
+                <highcharts-chart
+                    [Highcharts]="Highcharts"
+                    [options]="couponUsageChartOptions"
+                    [update]="updateFlag"
+                    style="width: 100%; height: 400px; display: block;"
+                ></highcharts-chart>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h3>Underperforming Services/Bundles</h3>
+            <div class="chart-content">
+                <highcharts-chart
+                    [Highcharts]="Highcharts"
+                    [options]="underperformingChartOptions"
+                    [update]="updateFlag"
+                    style="width: 100%; height: 400px; display: block;"
+                ></highcharts-chart>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h3>Top Customers by Revenue</h3>
+            <div class="chart-content">
+                <highcharts-chart
+                    [Highcharts]="Highcharts"
+                    [options]="topCustomersChartOptions"
+                    [update]="updateFlag"
+                    style="width: 100%; height: 400px; display: block;"
+                ></highcharts-chart>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h3>Low Customers by Revenue</h3>
+            <div class="chart-content">
+                <highcharts-chart
+                    [Highcharts]="Highcharts"
+                    [options]="lowCustomersChartOptions"
+                    [update]="updateFlag"
+                    style="width: 100%; height: 400px; display: block;"
+                ></highcharts-chart>
+            </div>
+        </div>
+    </div>
+</div>

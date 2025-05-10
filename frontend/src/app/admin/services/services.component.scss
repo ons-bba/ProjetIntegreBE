@@ -1,0 +1,40 @@
+@use '../../shared-styles/shared-styles' as shared;
+
+   .services-container {
+       @extend .container-shared;
+   }
+
+   .services-list {
+       @extend .grid-shared-three; // Changed from .list-shared to .grid-shared-three
+   }
+
+   .service-card {
+       @extend .card-shared;
+   }
+
+   .service-image {
+       @extend .image-shared;
+   }
+
+   .service-info {
+       @extend .info-shared;
+   }
+
+   .service-name {
+       @extend .name-shared;
+   }
+
+   .service-category,
+   .service-description,
+   .service-price,
+   .service-duration,
+   .service-is-bundle-only,
+   .service-status,
+   .service-offer-discount,
+   .service-created-at {
+       @extend .detail-shared;
+   }
+
+   .service-actions {
+       @extend .actions-shared;
+   }

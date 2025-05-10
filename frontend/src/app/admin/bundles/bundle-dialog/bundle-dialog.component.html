@@ -1,0 +1,85 @@
+<h2 mat-dialog-title>{{ data.selectedItem ? 'Edit' : 'Add' }} Bundle</h2>
+<mat-dialog-content>
+    <form [formGroup]="data.form">
+        <mat-form-field appearance="fill">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" required>
+            <mat-error *ngIf="data.form.get('name')?.touched && data.form.get('name')?.invalid">
+                Name is required
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Description</mat-label>
+            <input matInput formControlName="description" required>
+            <mat-error *ngIf="data.form.get('description')?.touched && data.form.get('description')?.invalid">
+                Description is required
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Services</mat-label>
+            <mat-select formControlName="serviceIds" multiple required>
+                <mat-option *ngFor="let option of serviceOptions" [value]="option.value">
+                    {{ option.label }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="data.form.get('serviceIds')?.touched && data.form.get('serviceIds')?.invalid">
+                At least one service is required
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Price</mat-label>
+            <input matInput type="number" formControlName="price" required>
+            <mat-error *ngIf="data.form.get('price')?.touched && data.form.get('price')?.invalid">
+                Price is required and must be non-negative
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Discount (%)</mat-label>
+            <input matInput type="number" formControlName="discount" required>
+            <mat-error *ngIf="data.form.get('discount')?.touched && data.form.get('discount')?.invalid">
+                Discount is required and must be non-negative
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Time-Limited Discount (%)</mat-label>
+            <input matInput type="number" formControlName="timeLimitedDiscount">
+            <mat-error
+                *ngIf="data.form.get('timeLimitedDiscount')?.touched && data.form.get('timeLimitedDiscount')?.invalid">
+                Time-Limited Discount must be non-negative
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Discount Start Date</mat-label>
+            <input matInput [matDatepicker]="startPicker" formControlName="discountStartDate">
+            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+            <mat-datepicker #startPicker></mat-datepicker>
+            <mat-icon matSuffix class="clear-icon" (click)="clearDiscountStartDate()" *ngIf="data.form.get('discountStartDate')?.value">clear</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Discount End Date</mat-label>
+            <input matInput [matDatepicker]="endPicker" formControlName="discountEndDate">
+            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker></mat-datepicker>
+            <mat-icon matSuffix class="clear-icon" (click)="clearDiscountEndDate()" *ngIf="data.form.get('discountEndDate')?.value">clear</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Is Active</mat-label>
+            <mat-select formControlName="isActive">
+                <mat-option value="true">Yes</mat-option>
+                <mat-option value="false">No</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions style="display: flex; justify-content: flex-end; padding: 8px;">
+    <button mat-button (click)="onCancel()" style="margin-right: 8px;">Cancel</button>
+    <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!data.form.valid">Save</button>
+</mat-dialog-actions>

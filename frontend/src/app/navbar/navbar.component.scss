@@ -1,0 +1,140 @@
+.mat-toolbar {
+    padding: 0 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(90deg, #3f51b5, #5c6bc0);
+    height: 64px;
+    display: flex;
+    align-items: center;
+
+    @media (max-width: 600px) {
+        height: 56px;
+        padding: 0 10px;
+    }
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.app-logo {
+    height: 50px;
+    width: auto;
+    transition: transform 0.3s ease;
+
+    @media (max-width: 600px) {
+        height: 42px;
+    }
+}
+
+.app-logo:hover {
+    transform: scale(1.05);
+}
+
+.app-name {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+
+    @media (max-width: 600px) {
+        font-size: 16px;
+    }
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    @media (max-width: 600px) {
+        gap: 10px;
+    }
+}
+
+.auth-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    @media (max-width: 600px) {
+        gap: 8px;
+    }
+}
+
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 5px 10px;
+    border-radius: 20px;
+
+    @media (max-width: 600px) {
+        padding: 3px 8px;
+        gap: 8px;
+    }
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    transition: transform 0.3s ease;
+
+    @media (max-width: 600px) {
+        width: 28px;
+        height: 28px;
+        border: 1px solid #fff;
+    }
+}
+
+.user-avatar:hover {
+    transform: scale(1.1);
+}
+
+.username {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+
+    @media (max-width: 600px) {
+        font-size: 12px;
+    }
+}
+
+button {
+    color: #fff;
+    font-weight: 500;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+
+    @media (max-width: 600px) {
+        font-size: 12px;
+        padding: 0 8px;
+    }
+}
+
+button:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+button[routerLink] {
+    color: #fff;
+}
+
+button[routerLink].active {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-bottom: 2px solid #fff;
+}

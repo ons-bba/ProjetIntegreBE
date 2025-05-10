@@ -1,0 +1,49 @@
+<div class="bundles-container">
+    <h2>Bundles Management</h2>
+    <button mat-raised-button color="primary" (click)="openEditDialog()" class="add-button">
+        <mat-icon>add</mat-icon> Add New Bundle
+    </button>
+    <div *ngIf="isLoading" class="loading-message">
+        Loading bundles...
+    </div>
+    <div *ngIf="!isLoading" class="bundles-list">
+        <div class="bundle-card" *ngFor="let bundle of bundles">
+            <div class="bundle-image">
+                <img [src]="bundle.image || 'images/bundle-icon.png'" alt="Bundle Image">
+            </div>
+            <div class="bundle-info">
+                <div class="bundle-name">{{ bundle.name }}</div>
+                <div class="bundle-description">
+                    Description: {{ getTruncatedDescription(bundle.description, bundle._id) }}
+                    <a *ngIf="isDescriptionLong(bundle.description) && !expandedDescriptions[bundle._id]" 
+                       (click)="toggleDescription(bundle._id)" class="toggle-link">Show More</a>
+                    <a *ngIf="isDescriptionLong(bundle.description) && expandedDescriptions[bundle._id]" 
+                       (click)="toggleDescription(bundle._id)" class="toggle-link">Show Less</a>
+                </div>
+                <div class="bundle-services">
+                    Services: {{ getTruncatedServiceNames(bundle.serviceIds, bundle._id) }}
+                    <a *ngIf="bundle.serviceIds.length > 2 && !expandedServices[bundle._id]" 
+                       (click)="toggleServices(bundle._id)" class="toggle-link">Show More</a>
+                    <a *ngIf="bundle.serviceIds.length > 2 && expandedServices[bundle._id]" 
+                       (click)="toggleServices(bundle._id)" class="toggle-link">Show Less</a>
+                </div>
+                <div class="bundle-price">Price: {{ bundle.price }} TND</div>
+                <div class="bundle-discount">Discount: {{ bundle.discount }}%</div>
+                <div class="bundle-time-limited-discount" *ngIf="bundle.timeLimitedDiscount">
+                    Time-Limited Discount: {{ bundle.timeLimitedDiscount }}%
+                    ({{ bundle.discountStartDate | date:'mediumDate' }} - {{ bundle.discountEndDate | date:'mediumDate' }})
+                </div>
+                <div class="bundle-status">Status: {{ bundle.isActive ? 'Active' : 'Inactive' }}</div>
+                <div class="bundle-created-at">Created At: {{ bundle.createdAt | date:'medium' }}</div>
+            </div>
+            <div class="bundle-actions">
+                <button mat-raised-button color="primary" (click)="openEditDialog(bundle)" class="edit-button">
+                    <mat-icon>edit</mat-icon> Edit
+                </button>
+                <button mat-raised-button color="warn" (click)="deleteBundle(bundle._id)" class="delete-button">
+                    <mat-icon>delete</mat-icon> Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

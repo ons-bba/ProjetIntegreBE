@@ -1,0 +1,90 @@
+<h2 mat-dialog-title>{{ data.selectedItem ? 'Edit' : 'Add' }} Coupon</h2>
+<mat-dialog-content>
+    <form [formGroup]="data.form">
+        <mat-form-field appearance="fill">
+            <mat-label>Code</mat-label>
+            <input matInput formControlName="code" required>
+            <mat-error *ngIf="data.form.get('code')?.touched && data.form.get('code')?.invalid">
+                Code is required
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Type</mat-label>
+            <mat-select formControlName="type" required>
+                <mat-option value="reduction">Reduction</mat-option>
+                <mat-option value="freeService">Free Service</mat-option>
+                <mat-option value="freeBundle">Free Bundle</mat-option>
+                <mat-option value="fuelCredit">Fuel Credit</mat-option>
+            </mat-select>
+            <mat-error *ngIf="data.form.get('type')?.touched && data.form.get('type')?.invalid">
+                Type is required
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Discount (%)</mat-label>
+            <input matInput type="number" formControlName="discount">
+            <mat-error *ngIf="data.form.get('discount')?.touched && data.form.get('discount')?.hasError('required')">
+                Discount is required
+            </mat-error>
+            <mat-error *ngIf="data.form.get('discount')?.touched && data.form.get('discount')?.hasError('min')">
+                Discount must be at least {{ data.form.get('discount')?.getError('min')?.min }}
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Service</mat-label>
+            <mat-select formControlName="serviceId">
+                <mat-option *ngFor="let service of serviceOptions" [value]="service.value">
+                    {{ service.label }}
+                </mat-option>
+                <mat-option *ngIf="!serviceOptions.length" disabled>No services available</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Bundle</mat-label>
+            <mat-select formControlName="bundleId">
+                <mat-option *ngFor="let bundle of bundleOptions" [value]="bundle.value">
+                    {{ bundle.label }}
+                </mat-option>
+                <mat-option *ngIf="!bundleOptions.length" disabled>No bundles available</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Start Date</mat-label>
+            <input matInput [matDatepicker]="startPicker" formControlName="startDate" required [min]="minDate" [matDatepickerFilter]="startDateFilter" (dateChange)="onStartDateChange($event)" readonly>
+            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+            <mat-datepicker #startPicker></mat-datepicker>
+            <mat-icon matSuffix class="clear-icon" (click)="clearStartDate()" *ngIf="data.form.get('startDate')?.value">clear</mat-icon>
+            <mat-error *ngIf="data.form.get('startDate')?.touched && data.form.get('startDate')?.invalid">
+                Start Date is required
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>End Date</mat-label>
+            <input matInput [matDatepicker]="endPicker" formControlName="endDate" [min]="data.form.get('startDate')?.value" [matDatepickerFilter]="endDateFilter" (dateChange)="onEndDateChange($event)" readonly>
+            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker></mat-datepicker>
+            <mat-icon matSuffix class="clear-icon" (click)="clearEndDate()" *ngIf="data.form.get('endDate')?.value">clear</mat-icon>
+            <mat-error *ngIf="data.form.get('endDate')?.touched && data.form.get('endDate')?.invalid">
+                End Date is invalid
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Max Uses</mat-label>
+            <input matInput type="number" formControlName="maxUses">
+            <mat-error *ngIf="data.form.get('maxUses')?.touched && data.form.get('maxUses')?.invalid">
+                Max Uses must be at least 1
+            </mat-error>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions style="display: flex; justify-content: flex-end; padding: 8px;">
+    <button mat-button (click)="onCancel()" style="margin-right: 8px;">Cancel</button>
+    <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!data.form.valid">Save</button>
+</mat-dialog-actions>

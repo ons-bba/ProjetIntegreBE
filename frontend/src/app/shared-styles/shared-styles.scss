@@ -1,0 +1,286 @@
+/* Shared container styles */
+.container-shared {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);
+    border-radius: 12px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 28px;
+    font-weight: 500;
+    color: #333;
+    letter-spacing: 0.5px;
+}
+
+/* Shared filters styles */
+.filters-shared {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    mat-form-field {
+        flex: 1;
+        min-width: 150px;
+    }
+}
+
+/* Shared list styles (flexbox, ~2 cards per row) */
+.list-shared {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+/* Shared grid styles (CSS Grid, ~2 cards per row) */
+.grid-shared {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 20px;
+}
+
+/* New grid layout for 3 cards per row */
+.grid-shared-three {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+/* Shared card styles */
+.card-shared {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: linear-gradient(145deg, #ffffff, #f1f5f9);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-height: 400px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    opacity: 0;
+    animation: fadeIn 0.8s ease-in forwards;
+}
+
+.card-shared:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Shared image styles */
+.image-shared {
+    margin-bottom: 10px;
+    text-align: center;
+    background-color: #e2e8f0;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.image-shared img {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    transition: transform 0.3s ease;
+}
+
+.image-shared img:hover {
+    transform: scale(1.05);
+}
+
+/* Shared info styles */
+.info-shared {
+    flex-grow: 1;
+    margin-bottom: 10px;
+}
+
+.name-shared {
+    margin: 0 0 10px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+    text-transform: uppercase;
+}
+
+.detail-shared {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+
+    strong {
+        color: #333;
+    }
+}
+
+/* Shared actions styles */
+.actions-shared {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Shared QR placeholder styles */
+.qr-placeholder {
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+    border: 1px dashed #d1d5db;
+    border-radius: 6px;
+    color: #718096;
+    font-size: 14px;
+    font-style: italic;
+    text-align: center;
+}
+
+/* Shared button styles */
+button {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.add-button {
+    background: linear-gradient(90deg, #4a90e2, #357abd);
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(74, 144, 226, 0.3);
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.add-button:hover {
+    background: linear-gradient(90deg, #357abd, #4a90e2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(74, 144, 226, 0.5);
+}
+
+button[color="primary"] {
+    background: linear-gradient(90deg, #4a90e2, #357abd);
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(74, 144, 226, 0.3);
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+button[color="primary"]:hover {
+    background: linear-gradient(90deg, #357abd, #4a90e2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(74, 144, 226, 0.5);
+}
+
+button[color="warn"] {
+    background: linear-gradient(90deg, #e53e3e, #c53030);
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(229, 62, 62, 0.3);
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+button[color="warn"]:hover {
+    background: linear-gradient(90deg, #c53030, #e53e3e);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(229, 62, 62, 0.5);
+}
+
+.edit-button mat-icon,
+.delete-button mat-icon,
+.add-button mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+}
+
+.action-button {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 4px;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.cancel-button {
+    background-color: #d32f2f;
+    color: #fff;
+
+    &:hover {
+        background-color: #b71c1c;
+        transform: scale(1.05);
+    }
+
+    &[disabled] {
+        background-color: #e0e0e0;
+        color: #9e9e9e;
+    }
+}
+
+.download-button {
+    background-color: #1976d2;
+    color: #fff;
+
+    &:hover {
+        background-color: #1565c0;
+        transform: scale(1.05);
+    }
+}
+
+.download-button mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    margin-right: 6px;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card-shared {
+        width: 100%;
+    }
+
+    .image-shared img {
+        width: 150px;
+        height: 150px;
+    }
+}
+
+/* Shared loading message */
+.loading-message {
+    text-align: center;
+    font-size: 16px;
+    color: #4a5568;
+    margin-top: 20px;
+}

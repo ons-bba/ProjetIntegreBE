@@ -1,0 +1,27 @@
+<div class="user-container">
+    <h2>Users Management</h2>
+    <button mat-raised-button color="primary" (click)="openEditDialog()" class="add-button">
+        <mat-icon>add</mat-icon> Add New User
+    </button>
+    <div class="users-list">
+        <div class="user-card" *ngFor="let user of users">
+            <div class="user-image">
+                <img [src]="user.image || 'images/user-icon.png'" alt="User Image">
+            </div>
+            <div class="user-info">
+                <div class="user-name">{{ user.name }}</div>
+                <div class="user-email">Email: {{ user.email }}</div>
+                <div class="user-role">Role: {{ user.role }}</div>
+                <div class="user-created-at">Created At: {{ user.createdAt | date:'medium' }}</div>
+            </div>
+            <div class="user-actions">
+                <button mat-raised-button color="primary" (click)="openEditDialog(user)" class="edit-button">
+                    <mat-icon>edit</mat-icon> Edit
+                </button>
+                <button mat-raised-button color="warn" (click)="deleteUser(user._id)" class="delete-button">
+                    <mat-icon>delete</mat-icon> Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

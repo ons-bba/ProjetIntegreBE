@@ -1,0 +1,25 @@
+<mat-toolbar color="primary">
+    <div class="logo-container" [routerLink]="getHomeRoute()" style="cursor: pointer;">
+        <img src="images/logo.png" alt="MobilityCore Logo" class="app-logo">
+        <span class="app-name">MobilityCore</span>
+    </div>
+
+    <div class="nav-links">
+        <button mat-button *ngIf="isAdmin" [routerLink]="['/admin']" routerLinkActive="active">Admin Panel</button>
+        <button mat-button *ngIf="isCustomer" [routerLink]="['/customer']" routerLinkActive="active">Customer Panel</button>
+    </div>
+
+    <span class="spacer"></span>
+
+    <div class="nav-links">
+        <div *ngIf="!isLoggedIn" class="auth-links">
+            <button mat-button [routerLink]="['/login']" routerLinkActive="active">Login</button>
+            <button mat-button [routerLink]="['/register']" routerLinkActive="active">Register</button>
+        </div>
+        <div class="user-section" *ngIf="isLoggedIn">
+            <img [src]="'images/user-avatar.png'" alt="User Avatar" class="user-avatar">
+            <span class="username">{{ user?.name || '' }}</span>
+            <button mat-button (click)="logout()">Logout</button>
+        </div>
+    </div>
+</mat-toolbar>

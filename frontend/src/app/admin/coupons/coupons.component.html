@@ -1,0 +1,33 @@
+<div class="coupons-container">
+    <h2>Coupons Management</h2>
+    <button mat-raised-button color="primary" (click)="openEditDialog()" class="add-button">
+        <mat-icon>add</mat-icon> Add New Coupon
+    </button>
+    <div class="coupons-list">
+        <div class="coupon-card" *ngFor="let coupon of coupons">
+            <div class="coupon-image">
+                <img [src]="coupon.image || 'images/coupon-icon.png'" alt="Coupon Image">
+            </div>
+            <div class="coupon-info">
+                <div class="coupon-code">Code: {{ coupon.code }}</div>
+                <div class="coupon-type">Type: {{ coupon.type }}</div>
+                <div class="coupon-discount" *ngIf="coupon.type === 'reduction'">Discount: {{ coupon.discount }}%</div>
+                <div class="coupon-service" *ngIf="coupon.type === 'freeService'">Service: {{
+                    getServiceName(coupon.serviceId) }}</div>
+                <div class="coupon-bundle" *ngIf="coupon.type === 'freeBundle'">Bundle: {{
+                    getBundleName(coupon.bundleId) }}</div>
+                <div class="coupon-dates">Valid: {{ coupon.startDate | date:'mediumDate' }} - {{ coupon.endDate |
+                    date:'mediumDate' }}</div>
+                <div class="coupon-uses">Uses: {{ coupon.uses }} / {{ coupon.maxUses }}</div>
+            </div>
+            <div class="coupon-actions">
+                <button mat-raised-button color="primary" (click)="openEditDialog(coupon)" class="edit-button">
+                    <mat-icon>edit</mat-icon> Edit
+                </button>
+                <button mat-raised-button color="warn" (click)="deleteCoupon(coupon._id)" class="delete-button">
+                    <mat-icon>delete</mat-icon> Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

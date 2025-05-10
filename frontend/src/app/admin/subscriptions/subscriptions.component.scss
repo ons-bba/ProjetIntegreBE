@@ -1,0 +1,40 @@
+@use '../../shared-styles/shared-styles' as shared;
+
+   .subscriptions-container {
+       @extend .container-shared;
+   }
+
+   .subscriptions-list {
+       @extend .grid-shared-three; // Changed from .list-shared to .grid-shared-three
+   }
+
+   .subscription-card {
+       @extend .card-shared;
+   }
+
+   .subscription-image {
+       @extend .image-shared;
+   }
+
+   .subscription-info {
+       @extend .info-shared;
+   }
+
+   .subscription-plan-name {
+       @extend .name-shared;
+   }
+
+   .subscription-customer,
+   .subscription-services,
+   .subscription-price,
+   .subscription-status,
+   .subscription-start-date,
+   .subscription-end-date,
+   .subscription-offer,
+   .subscription-fuel {
+       @extend .detail-shared;
+   }
+
+   .subscription-actions {
+       @extend .actions-shared;
+   }

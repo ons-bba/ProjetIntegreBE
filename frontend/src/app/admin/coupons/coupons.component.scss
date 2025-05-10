@@ -1,0 +1,38 @@
+@use '../../shared-styles/shared-styles' as shared;
+
+   .coupons-container {
+       @extend .container-shared;
+   }
+
+   .coupons-list {
+       @extend .grid-shared-three; // Changed from .list-shared to .grid-shared-three
+   }
+
+   .coupon-card {
+       @extend .card-shared;
+   }
+
+   .coupon-image {
+       @extend .image-shared;
+   }
+
+   .coupon-info {
+       @extend .info-shared;
+   }
+
+   .coupon-code {
+       @extend .name-shared;
+   }
+
+   .coupon-type,
+   .coupon-discount,
+   .coupon-service,
+   .coupon-bundle,
+   .coupon-dates,
+   .coupon-uses {
+       @extend .detail-shared;
+   }
+
+   .coupon-actions {
+       @extend .actions-shared;
+   }

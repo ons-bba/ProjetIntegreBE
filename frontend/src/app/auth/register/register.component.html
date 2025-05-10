@@ -1,0 +1,43 @@
+<div class="register-container fade-in">
+    <div class="logo-container">
+        <img src="images/logo.png" alt="MobilityCore Logo" class="app-logo">
+    </div>
+    <mat-card class="register-card">
+        <mat-card-header>
+            <mat-card-title>Inscription</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Email</mat-label>
+                    <input matInput formControlName="email" required>
+                    <mat-error *ngIf="registerForm.get('email')?.hasError('required')">Email requis</mat-error>
+                    <mat-error *ngIf="registerForm.get('email')?.hasError('email')">Email invalide</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Nom d'utilisateur</mat-label>
+                    <input matInput formControlName="name" required>
+                    <mat-error *ngIf="registerForm.get('name')?.hasError('required')">Nom d'utilisateur requis</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Mot de passe</mat-label>
+                    <input matInput type="password" formControlName="password" required>
+                    <mat-error *ngIf="registerForm.get('password')?.hasError('required')">Mot de passe requis</mat-error>
+                    <mat-error *ngIf="registerForm.get('password')?.hasError('minlength')">Le mot de passe doit contenir au moins 6 caractères</mat-error>
+                </mat-form-field>
+                <mat-card-actions class="button-row">
+                    <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid || isLoading">
+                        {{ isLoading ? 'Inscription en cours...' : 'S\'inscrire' }}
+                    </button>
+                    <button mat-raised-button color="warn" type="button" (click)="cancel()" [disabled]="isLoading">
+                        Annuler
+                    </button>
+                </mat-card-actions>
+                <div *ngIf="error" class="error">{{ error }}</div>
+            </form>
+        </mat-card-content>
+        <mat-card-actions>
+            <p>Déjà un compte ? <a [routerLink]="['/login']">Se connecter</a></p>
+        </mat-card-actions>
+    </mat-card>
+</div>

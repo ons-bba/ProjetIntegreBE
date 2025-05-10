@@ -1,0 +1,86 @@
+.payment-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+p {
+  font-size: 16px;
+  color: #4a5568;
+  text-align: center;
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.card-container {
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button[mat-raised-button][color="primary"] {
+  background-color: #4a90e2;
+  color: #fff;
+}
+
+button[mat-raised-button][color="primary"]:hover {
+  background-color: #357abd;
+  transform: translateY(-2px);
+}
+
+button[mat-raised-button][color="primary"][disabled] {
+  background: linear-gradient(90deg, #f97316, #e55b00);
+  color: #fff;
+  opacity: 0.7;
+  transform: none;
+  cursor: not-allowed;
+}
+
+button[mat-raised-button][color="warn"] {
+  background-color: #f44336;
+  color: #fff;
+}
+
+button[mat-raised-button][color="warn"]:hover {
+  background-color: #d32f2f;
+  transform: translateY(-2px);
+}
+
+.debug-message {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #ffebee;
+  border-radius: 4px;
+  text-align: center;
+  color: #c62828;
+}

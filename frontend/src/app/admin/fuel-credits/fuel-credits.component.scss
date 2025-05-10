@@ -1,0 +1,32 @@
+@use '../../shared-styles/shared-styles' as shared;
+
+   .fuel-credits-container {
+       @extend .container-shared;
+   }
+
+   .fuel-credits-list {
+       @extend .grid-shared-three; // Changed from .list-shared to .grid-shared-three
+   }
+
+   .fuel-credit-card {
+       @extend .card-shared;
+   }
+
+   .fuel-credit-image {
+       @extend .image-shared;
+   }
+
+   .fuel-credit-info {
+       @extend .info-shared;
+   }
+
+   .fuel-credit-customer,
+   .fuel-credit-credits,
+   .fuel-credit-rest-credits,
+   .fuel-credit-created-at {
+       @extend .detail-shared;
+   }
+
+   .fuel-credit-actions {
+       @extend .actions-shared;
+   }

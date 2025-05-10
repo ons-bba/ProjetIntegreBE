@@ -1,0 +1,29 @@
+<div class="fuel-credits-container">
+  <h2>Fuel Credits Management</h2>
+  <button mat-raised-button color="primary" (click)="openEditDialog()" class="add-button">
+    <mat-icon>add</mat-icon> Add New Fuel Credit
+  </button>
+  <div class="fuel-credits-list">
+    <div class="fuel-credit-card" *ngFor="let credit of fuelCredits">
+      <div class="fuel-credit-image">
+        <img [src]="credit.image || 'images/fuel-credit-icon.png'" alt="Fuel Credit Image">
+      </div>
+      <div class="fuel-credit-info">
+        <div class="fuel-credit-customer">Customer: {{ getCustomerName(credit.customerId) }}</div>
+        <div class="fuel-credit-credits">Credits: {{ credit.credits }}</div>
+        <div class="fuel-credit-rest-credits" *ngIf="credit.amount !== undefined">
+          Rest Credits: {{ credit.amount }}
+        </div>
+        <div class="fuel-credit-created-at">Created At: {{ credit.date | date:'mediumDate' }}</div>
+      </div>
+      <div class="fuel-credit-actions">
+        <button mat-raised-button color="primary" (click)="openEditDialog(credit)" class="edit-button">
+          <mat-icon>edit</mat-icon> Edit
+        </button>
+        <button mat-raised-button color="warn" (click)="deleteFuelCredit(credit._id)" class="delete-button">
+          <mat-icon>delete</mat-icon> Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

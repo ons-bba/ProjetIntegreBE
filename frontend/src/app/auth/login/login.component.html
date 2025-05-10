@@ -1,0 +1,34 @@
+<div class="login-container fade-in">
+    <div class="logo-container">
+        <img src="images/logo.png" alt="MobilityCore Logo" class="app-logo">
+        <span class="app-name">MobilityCore</span>
+    </div>
+    <mat-card class="login-card">
+        <mat-card-header>
+            <mat-card-title>Connexion</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Nom d'utilisateur</mat-label>
+                    <input matInput formControlName="name" required>
+                    <mat-error *ngIf="loginForm.get('name')?.hasError('required')">Nom d'utilisateur requis</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Mot de passe</mat-label>
+                    <input matInput type="password" formControlName="password" required>
+                    <mat-error *ngIf="loginForm.get('password')?.hasError('required')">Mot de passe requis</mat-error>
+                </mat-form-field>
+                <mat-card-actions class="button-row">
+                    <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid || isLoading">
+                        {{ isLoading ? 'Connexion en cours...' : 'Se connecter' }}
+                    </button>
+                </mat-card-actions>
+                <div *ngIf="error" class="error">{{ error }}</div>
+            </form>
+        </mat-card-content>
+        <mat-card-actions>
+            <p>Pas de compte ? <a [routerLink]="['/register']">S'inscrire</a></p>
+        </mat-card-actions>
+    </mat-card>
+</div>

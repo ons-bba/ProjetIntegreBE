@@ -1,0 +1,49 @@
+<h2 mat-dialog-title>{{ data.selectedItem ? 'Edit' : 'Add' }} User</h2>
+<mat-dialog-content>
+    <form [formGroup]="data.form">
+        <mat-form-field appearance="fill">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" required>
+            <mat-error *ngIf="data.form.get('name')?.touched && data.form.get('name')?.hasError('required')">
+                Name is required
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" required>
+            <mat-error *ngIf="data.form.get('email')?.touched && data.form.get('email')?.hasError('required')">
+                Email is required
+            </mat-error>
+            <mat-error *ngIf="data.form.get('email')?.touched && data.form.get('email')?.hasError('email')">
+                Please enter a valid email
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" formControlName="password" required>
+            <mat-error *ngIf="data.form.get('password')?.touched && data.form.get('password')?.hasError('required')">
+                Password is required
+            </mat-error>
+            <mat-error *ngIf="data.form.get('password')?.touched && data.form.get('password')?.hasError('minlength')">
+                Password must be at least 6 characters
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Role</mat-label>
+            <mat-select formControlName="role" required>
+                <mat-option value="Admin">Admin</mat-option>
+                <mat-option value="Customer">Customer</mat-option>
+            </mat-select>
+            <mat-error *ngIf="data.form.get('role')?.touched && data.form.get('role')?.hasError('required')">
+                Role is required
+            </mat-error>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions style="display: flex; justify-content: flex-end; padding: 8px;">
+    <button mat-button (click)="onCancel()" style="margin-right: 8px;">Cancel</button>
+    <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!data.form.valid">Save</button>
+</mat-dialog-actions>

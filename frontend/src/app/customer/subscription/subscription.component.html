@@ -1,0 +1,61 @@
+<div class="subscriptions-container">
+    <h2>Available Subscriptions</h2>
+
+    <!-- Filters -->
+    <div class="filters">
+        <mat-form-field appearance="fill">
+            <mat-label>Search by name</mat-label>
+            <input matInput [(ngModel)]="searchName" (input)="onSearchNameChange()" placeholder="Search by plan name">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Min Price</mat-label>
+            <input matInput type="number" [(ngModel)]="minPrice" (input)="onMinPriceChange($event)" placeholder="Min Price">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Max Price</mat-label>
+            <input matInput type="number" [(ngModel)]="maxPrice" (input)="onMaxPriceChange($event)" placeholder="Max Price">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Status</mat-label>
+            <mat-select [(ngModel)]="selectedStatus" (ngModelChange)="onStatusChange()">
+                <mat-option value="All Statuses">All Statuses</mat-option>
+                <mat-option value="active">Active</mat-option>
+                <mat-option value="inactive">Inactive</mat-option>
+                <mat-option value="expired">Expired</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <!-- Subscriptions List -->
+    <div class="subscriptions-grid">
+        <div class="subscription-card" *ngFor="let subscription of filteredSubscriptions">
+            <div class="subscription-image">
+                <img *ngIf="subscription.qrCode" [src]="subscription.qrCode" alt="QR Code" (error)="onQRCodeError(subscription)">
+                <div *ngIf="!subscription.qrCode" class="qr-placeholder">
+                    QR Code Not Available
+                </div>
+            </div>
+            <div class="subscription-info">
+                <h3>{{ subscription.planName }}</h3>
+                <p><strong>Price:</strong> {{ (subscription.price - (subscription.offerDiscount || 0)) | currency:'TND':'symbol':'1.3-3' }}</p>
+                <p *ngIf="subscription.offerDiscount"><strong>Offer Discount:</strong> {{ subscription.offerDiscount | currency:'TND':'symbol':'1.3-3' }}</p>
+                <p *ngIf="subscription.offerStartDate"><strong>Offer Start Date:</strong> {{ subscription.offerStartDate | date:'mediumDate' }}</p>
+                <p *ngIf="subscription.offerEndDate"><strong>Offer End Date:</strong> {{ subscription.offerEndDate | date:'mediumDate' }}</p>
+                <p><strong>Start Date:</strong> {{ subscription.startDate | date:'mediumDate' }}</p>
+                <p *ngIf="subscription.endDate"><strong>End Date:</strong> {{ subscription.endDate | date:'mediumDate' }}</p>
+                <p><strong>Status:</strong> {{ subscription.status }}</p>
+            </div>
+            <div class="subscription-actions">
+                <button mat-raised-button class="action-button cancel-button" [disabled]="subscription.status !== 'active' || !canCancelSubscription(subscription.startDate)" (click)="cancelSubscription(subscription._id, subscription.startDate)">
+                    Cancel
+                </button>
+                <button mat-raised-button class="action-button download-button" (click)="downloadQRCode(subscription)">
+                    <mat-icon>qr_code</mat-icon> QR Code
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

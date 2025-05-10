@@ -1,0 +1,116 @@
+<div class="reservation-container">
+    <h2>Make a Reservation</h2>
+    <form class="reservation-form" #reservationFormNg="ngForm" (ngSubmit)="submitReservation()">
+        <!-- Selected Item Display -->
+        <div *ngIf="selectedService || selectedBundle" class="selected-item">
+            <div class="selected-item-header">
+                <h3>Selected Item</h3>
+                <button mat-icon-button class="deselect-button" (click)="deselectItem()" aria-label="Deselect item">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+            <div *ngIf="selectedService">
+                <p><strong>Service:</strong> {{ selectedService.name }}</p>
+                <p><strong>Price:</strong> {{ selectedService.price | currency:'TND':'symbol':'1.3-3' }}</p>
+                <p><strong>Duration:</strong> {{ selectedService.duration }} minutes</p>
+            </div>
+            <div *ngIf="selectedBundle">
+                <p><strong>Bundle:</strong> {{ selectedBundle.name }}</p>
+                <p><strong>Price:</strong> {{ selectedBundle.price | currency:'TND':'symbol':'1.3-3' }}</p>
+                <p><strong>Services Included:</strong> {{ selectedBundle.serviceIds.length }}</p>
+            </div>
+        </div>
+
+        <!-- Service Selection: Show only if no bundle or service is selected -->
+        <div *ngIf="!selectedService && !selectedBundle">
+            <mat-form-field appearance="fill">
+                <mat-label>Select Service</mat-label>
+                <mat-select id="serviceId" [(ngModel)]="reservation.serviceId" name="serviceId" (ngModelChange)="onServiceChange()">
+                    <mat-option value="">None</mat-option>
+                    <mat-option *ngFor="let service of services" [value]="service._id">
+                        {{ service.name }} ({{ service.price | currency:'TND':'symbol':'1.3-3' }})
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <!-- Bundle Selection: Show only if no service or bundle is selected -->
+        <div *ngIf="!selectedService && !selectedBundle">
+            <mat-form-field appearance="fill">
+                <mat-label>Select Bundle</mat-label>
+                <mat-select id="bundleId" [(ngModel)]="reservation.bundleId" name="bundleId" (ngModelChange)="onBundleChange()">
+                    <mat-option value="">None</mat-option>
+                    <mat-option *ngFor="let bundle of bundles" [value]="bundle._id">
+                        {{ bundle.name }} ({{ bundle.price | currency:'TND':'symbol':'1.3-3' }})
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <!-- Start Date Selection -->
+        <div>
+            <mat-form-field appearance="fill">
+                <mat-label>Start Date</mat-label>
+                <input matInput [matDatepicker]="startDatePicker" [(ngModel)]="reservation.startDate" name="startDate" required [min]="minDate" [matDatepickerFilter]="startDateFilter" (dateChange)="onStartDateChange($event)" readonly>
+                <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #startDatePicker></mat-datepicker>
+                <mat-icon matSuffix class="clear-icon" (click)="clearStartDate()" *ngIf="reservation.startDate">clear</mat-icon>
+            </mat-form-field>
+        </div>
+
+        <!-- End Date Selection -->
+        <div>
+            <mat-form-field appearance="fill">
+                <mat-label>End Date</mat-label>
+                <input matInput [matDatepicker]="endDatePicker" [(ngModel)]="reservation.endDate" name="endDate" required [min]="reservation.startDate" [matDatepickerFilter]="endDateFilter" (dateChange)="onEndDateChange($event)" readonly>
+                <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #endDatePicker></mat-datepicker>
+                <mat-icon matSuffix class="clear-icon" (click)="clearEndDate()" *ngIf="reservation.endDate">clear</mat-icon>
+            </mat-form-field>
+        </div>
+
+        <!-- Time Selection with Mat Select -->
+        <div>
+            <mat-form-field appearance="fill">
+                <mat-label>Reservation Time</mat-label>
+                <mat-select id="time" [(ngModel)]="reservation.time" name="time" required>
+                    <mat-option value="" disabled>Select a time</mat-option>
+                    <mat-option *ngFor="let time of timeSlots" [value]="time">
+                        {{ time }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <!-- Coupon Code Input and Apply Button -->
+        <div class="form-group">
+            <mat-form-field appearance="fill">
+                <mat-label>Coupon Code</mat-label>
+                <input matInput [(ngModel)]="reservation.couponCode" name="couponCode" placeholder="Enter coupon code (optional)">
+            </mat-form-field>
+            <button mat-raised-button color="primary" type="button" class="apply-coupon-button" (click)="applyCoupon()" [disabled]="isCouponApplied">
+                Apply Coupon
+            </button>
+            <button mat-raised-button color="warn" type="button" class="remove-coupon-button" (click)="resetCouponState()" *ngIf="isCouponApplied">
+                Remove Coupon
+            </button>
+        </div>
+
+        <!-- Coupon Applied Indicator -->
+        <div class="coupon-applied" *ngIf="isCouponApplied">
+            <p>Coupon "{{ appliedCouponCode }}" applied! Discount: {{ discountPercentage.toFixed(2) }}% ({{ offerDiscount | currency:'TND':'symbol':'1.3-3' }})</p>
+        </div>
+
+        <!-- Total Cost Display -->
+        <div>
+            <label>Total Amount</label>
+            <p>{{ totalCost | currency:'TND':'symbol':'1.3-3' }}</p>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <button mat-raised-button color="primary" type="submit" [disabled]="isSubmitting || reservationFormNg.invalid || (!reservation.serviceId && !reservation.bundleId)">Submit Reservation</button>
+            <button mat-raised-button color="warn" type="button" (click)="cancel()">Cancel</button>
+        </div>
+    </form>
+</div>

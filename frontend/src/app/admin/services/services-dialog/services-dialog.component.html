@@ -1,0 +1,95 @@
+<h2 mat-dialog-title>{{ data.selectedItem ? 'Edit' : 'Add' }} Service</h2>
+<mat-dialog-content>
+    <form [formGroup]="data.form">
+        <mat-form-field appearance="fill">
+            <mat-label>Category</mat-label>
+            <mat-select formControlName="category" required>
+                <mat-option *ngFor="let category of categoryOptions" [value]="category">
+                    {{ category }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="data.form.get('category')?.touched && data.form.get('category')?.invalid">
+                Category is required
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" required>
+            <mat-error *ngIf="data.form.get('name')?.touched && data.form.get('name')?.invalid">
+                Name is required
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Description</mat-label>
+            <input matInput formControlName="description" required>
+            <mat-error *ngIf="data.form.get('description')?.touched && data.form.get('description')?.invalid">
+                Description is required
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Price</mat-label>
+            <input matInput type="number" formControlName="price" required>
+            <mat-error *ngIf="data.form.get('price')?.touched && data.form.get('price')?.invalid">
+                Price is required and must be non-negative
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Duration (minutes)</mat-label>
+            <input matInput type="number" formControlName="duration" required>
+            <mat-error *ngIf="data.form.get('duration')?.touched && data.form.get('duration')?.invalid">
+                Duration is required and must be non-negative
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Is Bundle Only</mat-label>
+            <mat-select formControlName="isBundleOnly" required>
+                <mat-option [value]="true">Yes</mat-option>
+                <mat-option [value]="false">No</mat-option>
+            </mat-select>
+            <mat-error *ngIf="data.form.get('isBundleOnly')?.touched && data.form.get('isBundleOnly')?.invalid">
+                This field is required
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+                <mat-option value="Active">Active</mat-option>
+                <mat-option value="Inactive">Inactive</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Offer Discount (%)</mat-label>
+            <input matInput type="number" formControlName="offerDiscount">
+            <mat-error *ngIf="data.form.get('offerDiscount')?.touched && data.form.get('offerDiscount')?.invalid">
+                Offer Discount must be non-negative
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Offer Start Date</mat-label>
+            <input matInput [matDatepicker]="startPicker" formControlName="offerStartDate" [min]="minDate" [matDatepickerFilter]="offerStartDateFilter" (dateChange)="onOfferStartDateChange($event)">
+            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+            <mat-datepicker #startPicker></mat-datepicker>
+            <mat-icon matSuffix class="clear-icon" (click)="clearOfferStartDate()" *ngIf="data.form.get('offerStartDate')?.value">clear</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Offer End Date</mat-label>
+            <input matInput [matDatepicker]="endPicker" formControlName="offerEndDate" [min]="data.form.get('offerStartDate')?.value" [matDatepickerFilter]="offerEndDateFilter" (dateChange)="onOfferEndDateChange($event)">
+            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker></mat-datepicker>
+            <mat-icon matSuffix class="clear-icon" (click)="clearOfferEndDate()" *ngIf="data.form.get('offerEndDate')?.value">clear</mat-icon>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions style="display: flex; justify-content: flex-end; padding: 8px;">
+    <button mat-button (click)="onCancel()" style="margin-right: 8px;">Cancel</button>
+    <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!data.form.valid">Save</button>
+</mat-dialog-actions>
