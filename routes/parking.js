@@ -7,6 +7,7 @@ const parkingController = require('../controllers/parkingController');
 
 
 router.post('/',parkingController.createParking);
+router.post('/upload',parkingController.uploadAndProcessParkinPdf)
 router.get('/',parkingController.getAllParkings);
 router.get('/search',parkingController.rechercheParkingsProches)
 router.get('/:id',parkingController.getParkingById);

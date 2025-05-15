@@ -2,6 +2,9 @@ const { default: mongoose } = require('mongoose');
 const Parking = require('../models/parking');
 const Tarif = require('../models/tarif');
 const Place = require('../models/place')
+const fs = require('fs');
+const pdf = require('pdf-parse');
+
 const { isValidObjectId } = require('../models/validator/validators');
 
 
@@ -252,7 +255,53 @@ const parkingController = {
       coords[0] >= -180 && coords[0] <= 180 &&
       coords[1] >= -90 && coords[1] <= 90
     );
-  }
+  },
+   // upload and process parking pdf
+
+   uploadAndProcessParkinPdf: async (req,res)=>{
+    try {
+      // verifier si un fichier present 
+      if(!req.file){
+       return  res.status(400).json({message: "aucun fichier pdf uploadé"})
+      };
+      // Lire le contenue pdf
+       const dataBuffer = fs.readFileSync(req.file.path);
+       const data =pdf(dataBuffer);
+       // extraire les parking (exemple de format attendu dans le pdf)
+       const text =  data.text;
+       const parkingEntries = text.split('\n').filter(entry=>entry.trim() !== '');
+       const parkings = parkingEntries.map(entry=>{
+
+        [nom,statut,placesDisponible,longitude,latitude]= entry.split(';');
+        return {
+          nom,
+          statut,
+          placesDisponible,
+          localisation : {
+            type : 'Point',
+            coordinates : [parseFloat(longitude),parseFloat(latitude)]
+          }
+        }
+       });
+       // Enregistrer en base de donnée 
+
+       const savedParking = await Parking.insertMany(parkings);
+        // 5. supprimer le fichier 
+        fs.unlinkSync(req.file.path);
+
+        res.status(201).json({
+          message : `${savedParking.length} parkings enregistrées`,
+          parkings : savedParking
+        });
+
+    }catch(error){
+      console.error("Erreur lors de traitement pdf :",error);
+      res.status(500).json({        
+        message : "Erreur serveur "
+      })
+
+    }
+   }
 }
 
 
