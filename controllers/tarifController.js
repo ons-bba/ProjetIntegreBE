@@ -1,4 +1,4 @@
-const Tarif = require('../model/tarif');
+const Tarif = require('../models/tarif');
 const mongoose = require('mongoose');
 
 //créer un nouveau tarif 

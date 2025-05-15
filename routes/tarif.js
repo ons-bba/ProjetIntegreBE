@@ -1,6 +1,6 @@
 const express = require('express');
 const route = express.Router();
- const tarifController = require ('../controller/tarifController');
+ const tarifController = require ('../controllers/tarifController');
 
 
 

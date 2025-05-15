@@ -12,8 +12,9 @@ const parkingSchema = new Schema({
   // Statut (enum pour controller les valeurs possible )
   statut: {
     type: String,
-    enum: { values: ['OUVERT', 'FERME', 'COMPLET', 'MAINTENANCE'], message: 'Statut invalid' },
-    default: 'OUVERT'
+    enum: { values: ['OUVERT', 'FERME', 'COMPLET', 'MAINTENANCE'],
+       message: 'Statut invalide' },
+        default: 'OUVERT'
 
   },
   // Gestion des places 
@@ -25,7 +26,8 @@ const parkingSchema = new Schema({
   placesTotal: {
     type: Number,
     required: true,
-    validate: { validator: Number.isInteger, message: 'Le nombre total de places doit etre un entier' },
+    validate: { validator: Number.isInteger, 
+      message: 'Le nombre total de places doit etre un entier' },
     min: [1, 'Le parking doit avoir aumoins une place']
 
   },
@@ -39,7 +41,8 @@ const parkingSchema = new Schema({
     coordinates: {
       type: [Number], // [Longitide, latitude]
       required: true,
-      validate: isValidCoordinates // 'Les coordonnées doivent étre [longitude,latitude]'}
+      validate: isValidCoordinates,
+      message: 'Les coordonnées doivent être [longitude, latitude] et valides'// 'Les coordonnées doivent étre [longitude,latitude]'}
 
 
     }
@@ -66,7 +69,7 @@ const parkingSchema = new Schema({
     fermeture: {
       type: String,
       default: '20:00',
-      match: [/([0-1][0-9]|2[0-3]):[0-5][0-9]$/, 'Format horaire invalid (HH:MM)']
+      match: [/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/, 'Format horaire invalid (HH:MM)']
     }
   },
 
@@ -89,7 +92,7 @@ const parkingSchema = new Schema({
 
 // virtual pour calculer le taux d'occupation 
 parkingSchema.virtual('tauxOccupation').get(function () {
-  return ((this.placesTotal - this.placesDisponible) / this.placesTotal * 100).toFixed(2)
+  return ((this.placesTotal - this.placesDisponible) / this.placesTotal * 100).toFixed(2);
 });
 
 // Index Geospatial pour les requettes de proximite

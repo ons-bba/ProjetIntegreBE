@@ -20,7 +20,7 @@ const prestationSchema = Schema({
     categorie : {
         type : String,
         required : true,
-        enum :  ['STATIONNEMENT','SECURITE','ELECTRIQUE','CONFORT','PREMIUM']
+        enum :  ['confort', 'securite', 'eco', 'technologie']
         
     },
     //Tarification 
@@ -44,8 +44,8 @@ const prestationSchema = Schema({
         default : true
     },
     horaires : {
-        ouverture : {type : String,match : /^([0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/},
-        fermeture : {type : String,match :/^([0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/ }
+        ouverture : {type : String,match : /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/},
+        fermeture : {type : String,match :/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/ }
     },
     exigences : [String],  // Ex: ["Permis B", "Câble Type 2"]
      // Metadonnées 

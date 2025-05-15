@@ -7,12 +7,11 @@ const tarifSchema = new Schema({
   parking:{
     type:Schema.Types.ObjectId,
     ref: 'Parking',
-    required: true,
     index:true
   },
   type: {
     type: String, 
-    enum: ['standard', 'premium', 'handicapé', 'electrique'],
+    enum: ['standard', 'premium', 'handicape', 'electrique',],
     required: true,
     index:true
   },
@@ -42,7 +41,7 @@ const tarifSchema = new Schema({
       },
       {
         validator: function(v){
-          return !v || v>= this.tarifHoraire*24*0.9; // Au moins 90% du tarif horaire x 24 
+          return !v || v>= this.tarifHoraire; // Au moins 90% du tarif horaire x 24 
         },
         message: 'Le tarif journalier doit être au moins 90% du tarif horaire journalisé (tarifHoraire * 24 * 0.9)'
       }
@@ -58,7 +57,7 @@ const tarifSchema = new Schema({
       },
       {
         validator: function(v){
-          return !v || !this.tarifJournalier || v>= this.tarifJournalier*30*0.8;
+          return !v || !this.tarifJournalier || v>= this.tarifJournalier;
         },
         message: 'Le tarif mensuel doit etre cohérent avec le tarif journalier'
       }

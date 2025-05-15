@@ -1,4 +1,4 @@
-const Prestation = require('../model/prestation')
+const Prestation = require('../models/prestation')
 
 const prestationController = {
 

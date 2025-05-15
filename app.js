@@ -4,9 +4,11 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 // prestation 
-const prestationRouter = require('./routes/prestation')
-const parkingRouter = require('./routes/parking')
-const tarifRouter = require('./routes/tarif')
+const prestationRouter = require('./routes/prestation');
+const parkingRouter = require('./routes/parking');
+const tarifRouter = require('./routes/tarif');
+const placeRouter= require('./routes/place');
+const reservationRouter = require('./routes/booking')
 
 const mongoose = require("mongoose");
 const configDb = require("./config/db.json");
@@ -37,6 +39,9 @@ app.use('/users', usersRouter);
 app.use('/api/prestations',prestationRouter);
 app.use('/api/parking',parkingRouter);
 app.use('/api/tarif',tarifRouter)
+app.use('/api/place',placeRouter);
+// reservation 
+
 
 
 
