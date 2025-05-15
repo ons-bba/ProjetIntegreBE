@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Prestation = require('../model/prestation');
-const prestationController= require('../controller/prestationController');
+const Prestation = require('../models/prestation');
+const prestationController= require('../controllers/prestationController');
 
 
 
