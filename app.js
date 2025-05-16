@@ -8,7 +8,7 @@ const prestationRouter = require('./routes/prestation');
 const parkingRouter = require('./routes/parking');
 const tarifRouter = require('./routes/tarif');
 const placeRouter= require('./routes/place');
-const reservationRouter = require('./routes/booking')
+
 
 const mongoose = require("mongoose");
 const configDb = require("./config/db.json");
