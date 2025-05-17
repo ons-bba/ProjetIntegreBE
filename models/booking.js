@@ -1,129 +1,210 @@
 const mongoose = require('mongoose');
-const { validate } = require('./parking');
 const Schema = mongoose.Schema;
 
-const bookingSchema = new Schema({
-    //reference à l'utilisateur qui a fait la reservation
-
-    user : {
+const reservationSchema = new Schema({
+    // Références
+    user: {
         type: Schema.Types.ObjectId,
-        ref : 'User'
-       
+        ref: 'User',
+        required: [true, 'L\'utilisateur est obligatoire'],
+        index: true
     },
-
-    // Référence parking 
-
-    parking : {
-        type : Schema.Types.ObjectId,
-        ref : 'Parking',
-        required : [true, 'Le parking est obligatoire']
+    parking: {
+        type: Schema.Types.ObjectId,
+        ref: 'Parking',
+        required: [true, 'Le parking est obligatoire'],
+        index: true
     },
-
-
-    //Référence a la place réservée 
-    place : {
-        type : Schema.Types.ObjectId,
-        ref : 'Place',
-        required : [true, 'le parking est obligatoire'],
-        validate : {
-            validator : async function(v){
-                // verifie que la place appartient bien au parking spécifie
-                const place = await mongoose.model('Place').findOne({_id:v,parking : this.parking});
+    place: {
+        type: Schema.Types.ObjectId,
+        ref: 'Place',
+        required: [true, 'La place est obligatoire'],
+        validate: {
+            validator: async function(v) {
+                if (!this.parking) return true;
+                const place = await mongoose.model('Place').findOne({
+                    _id: v,
+                    parking: this.parking
+                });
                 return place !== null;
             },
-            message : 'La place spécidiée n\'est pas au parking indiqué'
+            message: 'La place ne correspond pas au parking spécifié'
         }
     },
 
-   //Dates
-   dateDebut : {
-    type : Date,
-    required : true,
-    validate : {
-        validator : function(v){
-            return v > new Date();
-        },
-        message : 'La réservation doit commencer dans le future'
-    }
-   },
-   dateFin : {
-    type : Date,
-    required : true,
-    validate : {
-        validator : function (v){
-            return v > this.dateDebut;
-        },
-        message : 'la date de fin doit étre aprés le début'
-    }
-   },
-   // Montant (calculé à partir du tarif de la place )
-
-   montantTotal : {
-    type : Number,
-    default : 0
-    
-   },
-
-   statut : {
-    type : String,
-    enum : ['CONFIRMEE', 'ANNULEE', 'EN COURS', 'TERMINEE'],
-    default : 'CONFIRMEE'
-   },
-
-   // paiement 
-   paiementId : {
-    type : String,
-    required : true //function(){
-        //return this.statut === 'CONFIRMEE'
-    //}
-   }
-},
-{timestamps : true,
-    toJSON : {virtuals : true}
-}
-);
-
-// Middleware pour calculer le montant avant sauvgarde
-
-bookingSchema.pre('save', async function(next){
-    if(this.isModified('place') || this.isModified('dateDebut') || this.isModified('dateFin') || this.isNew){
-        const place = await mongoose.model('Place').findById(this.place).populate('tarif');
-        if(!place || !place.tarif){
-            throw new Error('Tarif non trouvé pour cette place');
+    // Période de réservation
+    dateDebut: {
+        type: Date,
+        required: [true, 'La date de début est obligatoire'],
+        validate: {
+            validator: function(v) {
+                return v > new Date();
+            },
+            message: 'La réservation doit commencer dans le futur'
         }
+    },
+    dateFin: {
+        type: Date,
+        required: [true, 'La date de fin est obligatoire'],
+        validate: {
+            validator: function(v) {
+                const dureeMin = {
+                    HORAIRE: 15 * 60 * 1000,    // 15 min minimum
+                    JOURNALIER: 60 * 60 * 1000,  // 1h minimum
+                    MENSUEL: 24 * 60 * 60 * 1000 // 24h minimum
+                };
+                return v > this.dateDebut && 
+                       (v - this.dateDebut) >= dureeMin[this.typeReservation];
+            },
+            message: function(props) {
+                return `Durée trop courte pour une réservation ${this.typeReservation.toLowerCase()}`;
+            }
+        }
+    },
 
-        const dureeHeures = (this.dateFin - this.dateDebut)/(1000 * 60 * 60);
-        this.montantTotal = dureeHeures * place.tarif.tarifHoraire;
+    // Type et tarification
+    typeReservation: {
+        type: String,
+        enum: {
+            values: ['HORAIRE', 'JOURNALIER', 'MENSUEL'],
+            message: 'Type de réservation invalide'
+        },
+        required: true,
+        default: 'HORAIRE'
+    },
+    montantTotal: {
+        type: Number,
+        default: 0,
+        min: [0, 'Le montant ne peut pas être négatif']
+    },
+    tarifApplique: {
+        type: {
+            valeur: Number,
+            typeTarif: String,
+            dateApplication: Date,
+            tarifReference: { 
+                type: Schema.Types.ObjectId, 
+                ref: 'Tarif' 
+            }
+        },
+        required: true
+    },
+    historiqueTarifs: [{
+        valeur: Number,
+        typeTarif: String,
+        dateApplication: Date,
+        tarifReference: { 
+            type: Schema.Types.ObjectId, 
+            ref: 'Tarif' 
+        },
+        raisonChangement: {
+            type: String,
+            enum: ['AUTO', 'MANUEL', 'PROMOTION', 'AJUSTEMENT']
+        }
+    }],
+
+    // Statut
+    statut: {
+        type: String,
+        enum: {
+            values: ['CONFIRMEE', 'ANNULEE', 'EN_COURS', 'TERMINEE'],
+            message: 'Statut invalide'
+        },
+        default: 'CONFIRMEE'
+    },
+
+    // Paiement
+    paiement: {
+        id: String,
+        method: {
+            type: String,
+            enum: ['CARTE', 'ESPECES', 'PORTEFEUILLE', 'COUPON']
+        },
+        status: {
+            type: String,
+            enum: ['EN_ATTENTE', 'PAYE', 'ERREUR', 'REMBOURSE'],
+            default: 'EN_ATTENTE'
+        }
     }
-    next();
-
+}, {
+    timestamps: true,
+    toJSON: {
+        virtuals: true,
+        transform: (doc, ret) => {
+            delete ret.__v;
+            return ret;
+        }
+    }
 });
 
+// Middleware de pré-sauvegarde
+reservationSchema.pre('save', async function(next) {
+    if (this.isModified('typeReservation') || this.isModified('dateDebut') || 
+        this.isModified('dateFin') || this.isNew) {
+        
+        const place = await mongoose.model('Place')
+            .findById(this.place)
+            .populate('tarifs');
+        
+        if (!place?.tarifs) {
+            throw new Error('Tarifs non trouvés pour cette place');
+        }
 
-// verification de disponibilite (méthode statique)
- bookingSchema.statics.checkDisponibilite = async  function(placeId, dateDebut, dateFin){
-    const existing = await this.find({
-        place : placeId,
-        statut : { $ne : 'ANNULEE'},
-        $or : [
-            {dateDebut : {$lt : dateFin}, dateFin : {$gt : dateDebut}},
-            {dateDebut : {$gte : dateDebut, $lte: dateFin}}
-        ]
+        // Calcul du nouveau tarif
+        const nouveauTarif = {
+            valeur: this.getTarifByType(place.tarifs, this.typeReservation),
+            typeTarif: this.typeReservation,
+            dateApplication: new Date(),
+            tarifReference: place.tarifs._id
+        };
 
-    });
-    return existing.length === 0; 
- }
+        // Historique si modification de tarif
+        if (this.tarifApplique && this.tarifApplique.valeur !== nouveauTarif.valeur) {
+            this.historiqueTarifs.push({
+                ...this.tarifApplique.toObject(),
+                raisonChangement: this.isNew ? 'CREATION' : 'AUTO'
+            });
+        }
 
+        // Calcul du montant
+        this.tarifApplique = nouveauTarif;
+        this.montantTotal = this.calculerMontant();
+    }
+    next();
+});
 
- // virtual pour le parking (accés indirect via place)
+// Méthodes helpers
+reservationSchema.methods.getTarifByType = function(tarifs, type) {
+    const mapping = {
+        'HORAIRE': tarifs.tarifHoraire,
+        'JOURNALIER': tarifs.tarifJournalier, 
+        'MENSUEL': tarifs.tarifMensuel
+    };
+    return mapping[type];
+};
 
- bookingSchema.virtual('placeparking',{
-    ref : 'Place',
-    localField : 'place',
-    foreignField : '_id',
-    justOne : true,
-    options : {select : 'parking'}
- });
+reservationSchema.methods.calculerMontant = function() {
+    const dureeMs = this.dateFin - this.dateDebut;
+    let unite;
+    
+    switch (this.typeReservation) {
+        case 'HORAIRE':
+            unite = 1000 * 60 * 60; // 1h en ms
+            break;
+        case 'JOURNALIER':
+            unite = 1000 * 60 * 60 * 24; // 1j en ms
+            break;
+        case 'MENSUEL':
+            unite = 1000 * 60 * 60 * 24 * 30; // ~1mois en ms
+            break;
+    }
 
+    const quantite = Math.ceil(dureeMs / unite);
+    return parseFloat((quantite * this.tarifApplique.valeur).toFixed(2));
+};
 
- module.exports = mongoose.model('Reservation',bookingSchema)
+// Index
+reservationSchema.index({ place: 1, dateDebut: 1, dateFin: 1 });
+reservationSchema.index({ user: 1, dateDebut: 1 });
+
+module.exports = mongoose.model('Booking', reservationSchema);

@@ -10,7 +10,7 @@ const upload = require('../middlewares/multer')
 
 
 router.post('/',parkingController.createParking);
-router.post('/upload',upload.single("pdfFile"),parkingController.uploadAndProcessParkinPdf)
+router.post('/upload',upload.single("pdfFile"),parkingController.uploadAndProcessParkingPdf)
 router.get('/',parkingController.getAllParkings);
 router.get('/search',parkingController.rechercheParkingsProches)
 router.get('/:id',parkingController.getParkingById);

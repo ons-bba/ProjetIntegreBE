@@ -260,79 +260,62 @@ const parkingController = {
   },
    // upload and process parking pdf
 
-   uploadAndProcessParkinPdf: async (req, res) => {
-
-    
-
+   uploadAndProcessParkingPdf : async (req, res) => {
     try {
-      if (!req.file) {
-        return res.status(400).json({ error: 'Aucun fichier uploadé' });
-      }
-  
-   
-      
-          const data = await pdf(req.file.buffer);
-          const text =  data.text;
-           
-          // decouper le text en ligne 
+        // Vérifier si un fichier a été uploadé
+        if (!req.file) {
+            return res.status(400).json({ error: 'Aucun fichier uploadé' });
+        }
 
-          const lignes = text.split('\n').map(l=>{
-            return l.trim()
-          }).filter(v=>{
-            return v.length>0
-          })
+        // Extraire le texte du PDF
+        const data = await pdf(req.file.buffer);
+        const text = data.text;
 
-          const parkings = lignes.map(e=>{
-            const champs = e.split(';').map(c=>c.trim());
-            return {
-              nom : champs[0],
-              statut:champs[1],
-              placesDisponible:champs[2],
-              localisation: {
-                type:'Point',
-                coordinates:[champs[3],champs[4]]
-              }
+        // Nettoyer et diviser le texte en lignes
+        const lignes = text.split('\n')
+            .map(l => l.trim())
+            .filter(v => v.length > 0);
+
+        // Transformer chaque ligne en objet parking
+        const parkings = lignes.map(line => {
+            const champs = line.split(';').map(c => c.trim());
+            
+            // Validation basique des données
+            if (champs.length !== 5) {
+                throw new Error(`Format de ligne invalide: ${line}`);
             }
-          });
-         const parking = await  Parking.insertMany(parkings)
-         res.status(201).json({parking})
 
-          
-          
-          
+            return {
+                nom: champs[0],
+                statut: champs[1],
+                placesTotal: parseInt(champs[2]) || 0,
+                localisation: {
+                    type: 'Point',
+                    coordinates: [
+                        parseFloat(champs[3]),
+                        parseFloat(champs[4])
+                    ]
+                }
+            };
+        });
 
+        // Enregistrer les parkings dans la base de données
+        const result = await Parking.insertMany(parkings);
         
-          
-      
-      
-      
-     //const parkings = processParkingData(data.text);
-      
-    //   const savedParkings = await Parking.insertMany(parkings);
-      
-    //   // Nettoyage du fichier temporaire
-    //   if (req.file.path && fs.existsSync(req.file.path)) {
-    //     fs.unlinkSync(req.file.path);
-    //   }
-  
-    //   res.status(201).json({
-    //     message: `${savedParkings.length} parkings importés avec succès`,
-    //     data: savedParkings
-    //   });
-  
+        res.status(201).json({
+            message: 'Parkings enregistrés avec succès',
+            count: result.length,
+            parkings: result
+        });
+
     } catch (error) {
-      console.error('Erreur:', error);
-      
-      // if (req.file?.path && fs.existsSync(req.file.path)) {
-      //   fs.unlinkSync(req.file.path);
-      // }
-  
-      // const status = error.message.includes('invalide') ? 400 : 500;
-      // res.status(status).json({
-      //   error: status === 400 ? error.message : 'Erreur serveur'
-      // });
+        console.error('Erreur lors du traitement du fichier:', error);
+        res.status(500).json({ 
+            error: 'Erreur lors du traitement du fichier',
+            details: error.message 
+        });
     }
-  }
+}
 }
 
 
