@@ -31,7 +31,7 @@ const userSchema = new Schema({
   },
   telephone: {
     type: String,
-    match: [/^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/, 'Numéro de téléphone invalide']
+    match: [/^[0-9]{8}$/, 'Numéro de téléphone invalide']
   },
   role: {
     type: String,
@@ -69,6 +69,8 @@ const userSchema = new Schema({
     type: String,
     default: 'default-user.jpg'
   },
+  passwordResetToken: String,
+  passwordResetExpires: Date,
 }, {
   timestamps: false,
   versionKey: false

@@ -13,6 +13,7 @@ const reservationRouter = require('./routes/booking')
 const mongoose = require("mongoose");
 const configDb = require("./config/db.json");
 
+const cors = require('cors');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -20,6 +21,13 @@ const multer = require('multer');
 
 var app = express();
 require('dotenv').config();
+app.use(cors({
+  origin: 'http://localhost:4200', // Your frontend origin
+  exposedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE']
+}));
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

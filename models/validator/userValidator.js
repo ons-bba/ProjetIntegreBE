@@ -9,6 +9,7 @@ const validate = (schema) => async (req, res, next) => {
     }, { abortEarly: false });
     next();
   } catch (err) {
+    console.log(err)
     return res.status(400).json({
       success: false,
       errors: err.inner.map(e => ({
@@ -41,12 +42,12 @@ const userRegistrationSchema = yup.object().shape({
       .required('Le mot de passe est obligatoire')
       .min(8, 'Le mot de passe doit contenir au moins 8 caractères')
       .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.@$!%*?&])[A-Za-z\d.@$!%*?&]{8,}$/,
         'Doit contenir au moins une majuscule, un chiffre et un caractère spécial'
       ),
 
     telephone: yup.string()
-      .matches(/^\+?[0-9]{10,15}$/, 'Numéro de téléphone invalide (format: +XXXXXXXXXXX)')
+      .matches(/^[0-9]{8}$/, 'Numéro de téléphone invalide (format: 12 345 678)')
       .nullable(),
 
     role: yup.string()
@@ -92,7 +93,37 @@ const userUpdateSchema = yup.object().shape({
   })
 });
 
+
+const forgotPasswordSchema = yup.object().shape({
+  body: yup.object().shape({
+    email: yup.string()
+        .transform((value, originalValue) => String(originalValue))
+        .required("L'email est obligatoire")
+        .email('Email invalide')
+        .lowercase()
+  })
+});
+
+// Reset Password Schema
+const resetPasswordSchema = yup.object().shape({
+  body: yup.object().shape({
+    token: yup.string()
+        .required('Le token de réinitialisation est requis'),
+    newPassword: yup.string()
+        .required('Le nouveau mot de passe est obligatoire')
+        .min(8, 'Le mot de passe doit contenir au moins 8 caractères')
+        .matches(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.@$!%*?&])[A-Za-z\d.@$!%*?&]{8,}$/,
+            'Doit contenir au moins une majuscule, un chiffre et un caractère spécial'
+        ),
+    confirmPassword: yup.string()
+        .required('La confirmation du mot de passe est obligatoire')
+        .oneOf([yup.ref('newPassword')], 'Les mots de passe ne correspondent pas')
+  })
+});
 module.exports = {
   validateUserRegistration: validate(userRegistrationSchema),
-  validateUserUpdate: validate(userUpdateSchema)
+  validateUserUpdate: validate(userUpdateSchema),
+  validateForgotPassword: validate(forgotPasswordSchema),
+  validateResetPassword: validate(resetPasswordSchema)
 };

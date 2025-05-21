@@ -1,8 +1,10 @@
 var express = require('express');
 var router = express.Router();
-const User = require('../models/user');
-const { validateUser, validateUserRegistration, validateUserUpdate } = require('../models/validator/userValidator');  // Import the middleware
-const { registerUser, loginUser, deleteUser, getAllActiveUsers, getAllUsers, getUserById, verifyAccount, getFilteredUsers, suspendUser, updateUser, getUserStatistics } = require('../controllers/userController');
+const {  validateUserRegistration, validateUserUpdate, validateResetPassword, validateForgotPassword} = require('../models/validator/userValidator');  // Import the middleware
+const { registerUser, loginUser, deleteUser, getAllActiveUsers, getAllUsers, getUserById, verifyAccount, getFilteredUsers, suspendUser, updateUser, getUserStatistics,
+  resetPassword,
+  forgotPassword
+} = require('../controllers/userController');
 const { validateLogin } = require('../models/validator/loginValidator');
 const { verifyToken, restrictToAdmin } = require('../middlewares/authMiddleware');
 const { handleUploadErrors, upload } = require('../tools/uploads');
@@ -50,5 +52,15 @@ router.put(
     validateUserUpdate,  // Use update validator
     updateUser
   );
+router.post(
+    '/forgot-password',
+    validateForgotPassword,
+    forgotPassword
+);
 
+router.post(
+    '/reset-password',
+    validateResetPassword,
+    resetPassword
+);
 module.exports = router;

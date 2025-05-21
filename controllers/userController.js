@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const sendEmail = require('../tools/emailService');
 const jwt = require('jsonwebtoken');
+const {unlink} = require("node:fs");
 
 exports.registerUser = async (req, res) => {
   try {
@@ -8,14 +9,14 @@ exports.registerUser = async (req, res) => {
     const existingUser = await User.findOne({ email: req.body.email });
     if (existingUser) {
       // If user exists but has PENDING status, consider resending verification email
-      return res.status(409).json({ 
+      return res.status(409).json({
         success: false,
-        message: 'Cet email est déjà utilisé' 
+        message: 'Cet email est déjà utilisé'
       });
     }
 
     // 2. Handle image upload
-    let imagePath = '/uploads/users/default-user.jpg';
+    let imagePath = '/uploads/users/default.jpg';
     if (req.file) {
       imagePath = `/uploads/users/${req.file.filename}`;
     }
@@ -37,13 +38,13 @@ exports.registerUser = async (req, res) => {
 
     // 4. Generate verification token
     const verificationToken = user.generateVerificationToken();
-    const verificationUrl = `http://localhost:3000/users/verifyaccount/${verificationToken}`;
+    const verificationUrl = `http://localhost:4200/users/verifyaccount/${verificationToken}`;
 
     // 5. Send verification email
     const htmlContent = `
       <div style="font-family: Arial, sans-serif; padding: 20px;">
         <h2 style="color: #2563eb;">Bienvenue sur Parking Esprit Business!</h2>
-        <img src="${user.image}" alt="Profile" style="width: 100px; border-radius: 50%; margin-bottom: 20px;">
+        // <img src="${user.image}" alt="Profile" style="width: 100px; border-radius: 50%; margin-bottom: 20px;">
         <p>Bonjour ${user.prenom},</p>
         <p>Merci de vous être inscrit. Veuillez cliquer sur le lien ci-dessous pour activer votre compte :</p>
         <a href="${verificationUrl}" 
@@ -87,7 +88,7 @@ exports.registerUser = async (req, res) => {
 
     // Cleanup uploaded file if registration fails
     if (req.file) {
-      fs.unlink(req.file.path, (unlinkError) => {
+      unlink(req.file.path, (unlinkError) => {
         if (unlinkError) console.error('File cleanup failed:', unlinkError);
       });
     }
@@ -101,9 +102,9 @@ exports.registerUser = async (req, res) => {
       });
     }
 
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
-      message: 'Erreur interne du serveur' 
+      message: 'Erreur interne du serveur'
     });
   }
 };
@@ -712,6 +713,141 @@ exports.getUserStatistics = async (req, res) => {
     });
   }
 };
+
+const crypto = require('crypto');
+
+exports.forgotPassword = async (req, res) => {
+  console.log("Initiating reset password !!!")
+  try {
+    const { email } = req.body;
+
+    // Always return success to prevent email enumeration
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(200).json({
+        success: true,
+        message: 'Si cet email existe, un lien de réinitialisation sera envoyé'
+      });
+    }
+
+    // Generate reset token and expiration (10 minutes)
+    const resetToken = crypto.randomBytes(20).toString('hex');
+    user.passwordResetToken = resetToken;
+    user.passwordResetExpires = Date.now() + 600000; // 10 minutes
+
+    await user.save();
+    console.log(user);
+
+    // Send reset email
+    const resetUrl = `http://localhost:4200/reset-password?token=${resetToken}`;
+
+    const htmlContent = `
+      <div style="font-family: Arial, sans-serif; padding: 20px;">
+        <h2 style="color: #2563eb;">Réinitialisation de mot de passe</h2>
+        <p>Bonjour ${user.prenom},</p>
+        <p>Vous avez demandé à réinitialiser votre mot de passe. Cliquez sur le lien ci-dessous pour continuer :</p>
+        <a href="${resetUrl}" 
+           style="display: inline-block; padding: 10px 20px; 
+           background-color: #2563eb; color: white; 
+           text-decoration: none; border-radius: 5px;">
+           Réinitialiser le mot de passe
+        </a>
+        <p style="margin-top: 20px; color: #666;">
+          Ce lien expirera dans 10 minutes. Si vous n'avez pas fait cette demande, ignorez cet email.
+        </p>
+      </div>
+    `;
+
+    await sendEmail({
+      to: user.email,
+      subject: 'Réinitialisation de votre mot de passe Parking Esprit',
+      html: htmlContent,
+      text: `Utilisez ce lien pour réinitialiser votre mot de passe: ${resetUrl}`
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Un lien de réinitialisation a été envoyé à votre adresse email'
+    });
+
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur lors du traitement de la demande'
+    });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    const user = await User.findOne({
+      passwordResetToken: token,
+      passwordResetExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: 'Token invalide ou expiré'
+      });
+    }
+
+    // Update password and clear reset fields
+    user.mot_de_passe = newPassword;
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+
+    await user.save();
+
+    // Send confirmation email
+    const htmlContent = `
+      <div style="font-family: Arial, sans-serif; padding: 20px;">
+        <h2 style="color: #2563eb;">Mot de passe mis à jour</h2>
+        <p>Bonjour ${user.prenom},</p>
+        <p>Votre mot de passe a été réinitialisé avec succès.</p>
+        <p>Si vous n'avez pas effectué cette action, contactez immédiatement notre support.</p>
+      </div>
+    `;
+
+    await sendEmail({
+      to: user.email,
+      subject: 'Confirmation de réinitialisation de mot de passe',
+      html: htmlContent
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Mot de passe réinitialisé avec succès'
+    });
+
+  } catch (error) {
+    console.error('Reset password error:', error);
+
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({
+        success: false,
+        message: error.message
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: 'Erreur lors de la réinitialisation du mot de passe'
+    });
+  }
+};
+
+
+
+
+
+
+
+
+
 
 // Helper function to format distribution data
 const processDistribution = (data) => {
