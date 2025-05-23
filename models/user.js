@@ -43,8 +43,12 @@ const userSchema = new Schema({
     default: {}
   },
   historique_stationnement: [{
-    stationnementId: { type: Schema.Types.ObjectId, ref: 'Stationnement' },
-    date: { type: Date, default: Date.now }
+    stationnementId: { 
+      type: Schema.Types.ObjectId, 
+      ref: 'Stationnement' },
+    date: {
+       type: Date, 
+       default: Date.now }
   }],
   points_fidelite: {
     type: Number,

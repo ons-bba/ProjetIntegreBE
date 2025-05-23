@@ -8,6 +8,7 @@ const prestationRouter = require('./routes/prestation');
 const parkingRouter = require('./routes/parking');
 const tarifRouter = require('./routes/tarif');
 const placeRouter= require('./routes/place');
+const bookingRouter = require('./routes/booking')
 
 
 const mongoose = require("mongoose");
@@ -36,6 +37,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 // prestation & parking endPoint
+app.use('api/booking',bookingRouter);
 app.use('/api/prestations',prestationRouter);
 app.use('/api/parking',parkingRouter);
 app.use('/api/tarif',tarifRouter)

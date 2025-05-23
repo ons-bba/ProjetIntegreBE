@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const { isValidCoordinates } = require('./validator/validators');
+const parking = require('../controllers/parkingController')
+
 const Schema = mongoose.Schema;
 
 const parkingSchema = new Schema({

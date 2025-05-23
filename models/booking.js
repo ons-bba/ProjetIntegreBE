@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const reservationSchema = new Schema({
     // Références
-    user: {
+    client: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: [true, 'L\'utilisateur est obligatoire'],
