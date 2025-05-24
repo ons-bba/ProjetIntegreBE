@@ -37,7 +37,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 // prestation & parking endPoint
-app.use('api/booking',bookingRouter);
+app.use('/api/booking',bookingRouter);
 app.use('/api/prestations',prestationRouter);
 app.use('/api/parking',parkingRouter);
 app.use('/api/tarif',tarifRouter)

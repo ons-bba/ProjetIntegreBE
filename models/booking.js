@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const reservationSchema = new Schema({
+const bookingSchema = new Schema({
     // Références
     client: {
         type: Schema.Types.ObjectId,
@@ -54,22 +54,22 @@ const reservationSchema = new Schema({
                     MENSUEL: 24 * 60 * 60 * 1000 // 24h minimum
                 };
                 return v > this.dateDebut && 
-                       (v - this.dateDebut) >= dureeMin[this.typeReservation];
+                       (v - this.dateDebut) >= dureeMin[this.typeBooking];
             },
             message: function(props) {
-                return `Durée trop courte pour une réservation ${this.typeReservation.toLowerCase()}`;
+                return `Durée trop courte pour une réservation ${this.typeBooking.toLowerCase()}`;
             }
         }
     },
 
     // Type et tarification
-    typeReservation: {
+    typeBooking: {
         type: String,
         enum: {
             values: ['HORAIRE', 'JOURNALIER', 'MENSUEL'],
             message: 'Type de réservation invalide'
         },
-        required: true,
+        
         default: 'HORAIRE'
     },
     montantTotal: {
@@ -86,8 +86,7 @@ const reservationSchema = new Schema({
                 type: Schema.Types.ObjectId, 
                 ref: 'Tarif' 
             }
-        },
-        required: true
+        }
     },
     historiqueTarifs: [{
         valeur: Number,
@@ -138,24 +137,24 @@ const reservationSchema = new Schema({
 });
 
 // Middleware de pré-sauvegarde
-reservationSchema.pre('save', async function(next) {
-    if (this.isModified('typeReservation') || this.isModified('dateDebut') || 
+bookingSchema.pre('save', async function(next) {
+    if (this.isModified('typeBooking') || this.isModified('dateDebut') || 
         this.isModified('dateFin') || this.isNew) {
         
         const place = await mongoose.model('Place')
             .findById(this.place)
-            .populate('tarifs');
+            .populate('tarif');
         
-        if (!place?.tarifs) {
+        if (!place?.tarif) {
             throw new Error('Tarifs non trouvés pour cette place');
         }
 
         // Calcul du nouveau tarif
         const nouveauTarif = {
-            valeur: this.getTarifByType(place.tarifs, this.typeReservation),
-            typeTarif: this.typeReservation,
+            valeur: this.getTarifByType(place.tarif, this.typeBooking),
+            typeTarif: this.typeBooking,
             dateApplication: new Date(),
-            tarifReference: place.tarifs._id
+            tarifReference: place.tarif._id
         };
 
         // Historique si modification de tarif
@@ -174,7 +173,7 @@ reservationSchema.pre('save', async function(next) {
 });
 
 // Méthodes helpers
-reservationSchema.methods.getTarifByType = function(tarifs, type) {
+bookingSchema.methods.getTarifByType = function(tarifs, type) {
     const mapping = {
         'HORAIRE': tarifs.tarifHoraire,
         'JOURNALIER': tarifs.tarifJournalier, 
@@ -183,7 +182,7 @@ reservationSchema.methods.getTarifByType = function(tarifs, type) {
     return mapping[type];
 };
 
-reservationSchema.methods.calculerMontant = function() {
+bookingSchema.methods.calculerMontant = function() {
     const dureeMs = this.dateFin - this.dateDebut;
     let unite;
     
@@ -204,7 +203,7 @@ reservationSchema.methods.calculerMontant = function() {
 };
 
 // Index
-reservationSchema.index({ place: 1, dateDebut: 1, dateFin: 1 });
-reservationSchema.index({ user: 1, dateDebut: 1 });
+bookingSchema.index({ place: 1, dateDebut: 1, dateFin: 1 });
+bookingSchema.index({ user: 1, dateDebut: 1 });
 
-module.exports = mongoose.model('Booking', reservationSchema);
+module.exports = mongoose.model('Booking', bookingSchema);
