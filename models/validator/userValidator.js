@@ -79,7 +79,7 @@ const userUpdateSchema = yup.object().shape({
       .optional(),
 
     telephone: yup.string()
-      .matches(/^\+?[0-9]{10,15}$/, 'Numéro de téléphone invalide (format: +XXXXXXXXXXX)')
+      .matches(/^[0-9]{8}$/, 'Numéro de téléphone invalide (format: +XXXXXXXXXXX)')
       .nullable()
       .optional(),
 

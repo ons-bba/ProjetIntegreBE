@@ -254,9 +254,12 @@ exports.updateUser = async (req, res) => {
       email: req.body.email?.toLowerCase(),
       telephone: req.body.telephone,
       role: req.body.role,
-      sex: req.body.sex
+      sex: req.body.sex,
+      status : req.body.status
     };
-
+    if(req.user.role !=='ADMIN'){
+      delete updateData.status
+    }
     // Handle image upload
     if (req.file) {
       updateData.image = `/uploads/users/${req.file.filename}`;
