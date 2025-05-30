@@ -3,7 +3,8 @@ var router = express.Router();
 const {  validateUserRegistration, validateUserUpdate, validateResetPassword, validateForgotPassword} = require('../models/validator/userValidator');  // Import the middleware
 const { registerUser, loginUser, deleteUser, getAllActiveUsers, getAllUsers, getUserById, verifyAccount, getFilteredUsers, suspendUser, updateUser, getUserStatistics,
   resetPassword,
-  forgotPassword
+  forgotPassword,
+  changeUserImage
 } = require('../controllers/userController');
 const { validateLogin } = require('../models/validator/loginValidator');
 const { verifyToken, restrictToAdmin } = require('../middlewares/authMiddleware');
@@ -40,18 +41,34 @@ router.post('/login', validateLogin, loginUser);
 
 // router.delete('/:id', verifyToken, deleteUser);
 
-router.put('/:id', verifyToken, suspendUser);
+router.put('/:id', verifyToken,restrictToAdmin ,  suspendUser);
 
 // Add this route
 router.put(
     '/:id/update',
     verifyToken,
-    restrictToAdmin,
+    // restrictToAdmin,
     upload.single('image'),
     handleUploadErrors,
     validateUserUpdate,  // Use update validator
     updateUser
   );
+
+
+router.put(
+    '/:id/image',
+    verifyToken,
+    upload.single('image'),
+    handleUploadErrors,
+    async (req, res, next) => {
+      if (req.user.id !== req.params.id) {
+        return res.status(403).json({ success: false, message: 'Unauthorized to change this image.' });
+      }
+      next();
+    },
+    changeUserImage
+);
+
 router.post(
     '/forgot-password',
     validateForgotPassword,

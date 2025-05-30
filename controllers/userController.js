@@ -16,7 +16,7 @@ exports.registerUser = async (req, res) => {
     }
 
     // 2. Handle image upload
-    let imagePath = '/uploads/users/default.jpg';
+    let imagePath = '/uploads/users/default.png';
     if (req.file) {
       imagePath = `/uploads/users/${req.file.filename}`;
     }
@@ -259,6 +259,8 @@ exports.updateUser = async (req, res) => {
     };
     if(req.user.role !=='ADMIN'){
       delete updateData.status
+      delete updateData.email
+      delete updateData.role
     }
     // Handle image upload
     if (req.file) {
@@ -840,6 +842,38 @@ exports.resetPassword = async (req, res) => {
       success: false,
       message: 'Erreur lors de la réinitialisation du mot de passe'
     });
+  }
+};
+
+
+exports.changeUserImage = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const imagePath = req.file ? `/uploads/users/${req.file.filename}` : null;
+
+    if (!imagePath) {
+      return res.status(400).json({ success: false, message: 'No image uploaded.' });
+    }
+
+    const user = await User.findByIdAndUpdate(
+        userId,
+        { image:imagePath },
+        { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Image updated successfully.',
+      imagePath: user.imagePath
+    });
+
+  } catch (error) {
+    console.error('Image update error:', error);
+    res.status(500).json({ success: false, message: 'Server error while updating image.' });
   }
 };
 
