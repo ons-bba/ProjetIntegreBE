@@ -71,5 +71,11 @@ app.use(function(err, req, res, next) {
 
 
 mongoose.connect(configDb.mongo.uri)
+mongoose.connection.once('open', async () => {
+  console.log('Connected to MongoDB');
 
+  // Only run in development environment
+    const createInitialUsers = require('./tools/intialData');
+    await createInitialUsers();
+});
 module.exports = app;
