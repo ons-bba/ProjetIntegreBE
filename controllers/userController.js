@@ -868,7 +868,8 @@ exports.changeUserImage = async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'Image updated successfully.',
-      imagePath: user.imagePath
+      imagePath: user.imagePath ,
+      user: user
     });
 
   } catch (error) {
