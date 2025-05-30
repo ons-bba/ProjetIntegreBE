@@ -42,7 +42,7 @@ const userRegistrationSchema = yup.object().shape({
       .required('Le mot de passe est obligatoire')
       .min(8, 'Le mot de passe doit contenir au moins 8 caractères')
       .matches(
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.@$!%*?&])[A-Za-z\d.@$!%*?&]{8,}$/,
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.@$!%*?&;])[A-Za-z\d.@$!%*?&;]{8,}$/,
         'Doit contenir au moins une majuscule, un chiffre et un caractère spécial'
       ),
 
@@ -92,6 +92,7 @@ const userUpdateSchema = yup.object().shape({
       .optional()
   })
 });
+const PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.@$!%*?&;])[A-Za-z\d.@$!%*?&;]{8,}$/;
 
 
 const forgotPasswordSchema = yup.object().shape({
@@ -113,7 +114,7 @@ const resetPasswordSchema = yup.object().shape({
         .required('Le nouveau mot de passe est obligatoire')
         .min(8, 'Le mot de passe doit contenir au moins 8 caractères')
         .matches(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.@$!%*?&])[A-Za-z\d.@$!%*?&]{8,}$/,
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.@$!%*?&;])[A-Za-z\d.@$!%*?&;]{8,}$/,
             'Doit contenir au moins une majuscule, un chiffre et un caractère spécial'
         ),
     confirmPassword: yup.string()
